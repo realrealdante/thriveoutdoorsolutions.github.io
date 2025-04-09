@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="assets/css/main.css" />
 
-    <!-- Adding CSS to fix the scrolling issue and add space on the sides -->
+    <!-- Adding CSS to fix the scrolling issue and left padding -->
     <style>
         /* Reset margin and padding for the whole page */
         html, body {
@@ -15,7 +15,7 @@
             height: 100%; /* Ensure the page takes the full height */
         }
 
-        /* Ensures the header is at the top */
+        /* Ensure the header is at the top */
         header {
             margin-top: 0;
             padding-top: 0;
@@ -25,27 +25,24 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: space-between; /* This ensures footer stays at the bottom */
         }
 
         /* Main content section (your services) */
         #main {
             flex: 1;
-            padding-bottom: 100px;
-            padding-left: 20px; /* Add space to the left */
-            padding-right: 20px; /* Add space to the right */
-            max-width: 1200px; /* Optional: Max width to prevent stretching too wide */
-            margin: 0 auto; /* Center it horizontally within the available space */
+            padding-bottom: 100px; /* Reserve space for footer */
+            padding-left: 20px; /* Add left padding here */
         }
 
         /* Header section styling */
         header {
             margin-top: 0;
             padding-top: 0;
+            text-align: center;
             background-color: #28a745;
             color: white;
             padding: 20px;
-            width: 100%;
         }
 
         /* Footer styling */
@@ -57,10 +54,10 @@
             position: relative;
             bottom: 0;
             width: 100%;
-            clear: both;
+            clear: both; /* Ensures no floating content affects the footer */
         }
 
-        /* Footer icons */
+        /* Styling for footer content */
         footer .icons {
             margin-bottom: 10px;
         }
@@ -71,7 +68,7 @@
         }
 
         footer .copyright p {
-            font-size: 14px;
+            font-size: 14px; /* Default size for footer text */
         }
 
         footer .copyright p a {
@@ -145,7 +142,7 @@
         </ul>
         <div class="copyright">
             <p>&copy; Thrive Outdoor Solutions 2025.</p>
-            <p style="font-size: 12px; color: #bbb;">
+            <p style="font-size: 12px; color: #bbb;">Credits: <a href="http://html5up.net" target="_blank" style="color: #bbb;">HTML5 UP</a></p>
         </div>
     </footer>
 
