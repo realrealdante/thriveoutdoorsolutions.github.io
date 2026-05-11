@@ -40,26 +40,24 @@
             animation: slideDown 0.8s ease-out;
         }
 
-        .logo-wrap {
+        .brand {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 14px;
-            border-radius: 28px;
-            background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(242,248,244,0.95));
-            box-shadow: 
-                0 12px 30px rgba(0,0,0,0.08),
-                inset 0 1px 0 rgba(255,255,255,0.9);
-            border: 1px solid rgba(110, 140, 110, 0.15);
-            margin-bottom: 22px;
+            gap: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
         }
 
-        .logo-wrap img {
-            display: block;
-            width: min(420px, 88vw);
-            height: auto;
-            border-radius: 20px;
+        .brand-logo {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
             object-fit: cover;
+            border: 3px solid rgba(19, 95, 79, 0.18);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+            background: #fff;
+            flex: 0 0 auto;
         }
 
         header h1 {
@@ -68,9 +66,9 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 12px;
             font-weight: 800;
             letter-spacing: 0.02em;
+            line-height: 1;
         }
 
         header p {
@@ -156,11 +154,6 @@
         .service-title::before {
             content: '🌿';
             font-size: 1.6rem;
-        }
-
-        .service-items {
-            list-style: none;
-            padding-left: 0;
         }
 
         .service-items div {
@@ -273,26 +266,30 @@
             .container {
                 padding: 15px;
             }
-            
+
             header {
                 padding: 24px 18px 32px;
                 margin-bottom: 20px;
             }
 
-            .logo-wrap {
-                padding: 10px;
-                border-radius: 22px;
+            .brand {
+                gap: 10px;
             }
-            
+
+            .brand-logo {
+                width: 48px;
+                height: 48px;
+            }
+
             .services {
                 padding: 30px 25px;
             }
-            
+
             .service-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            
+
             .contact {
                 margin: 20px 0;
                 padding: 25px;
@@ -303,10 +300,10 @@
 <body>
     <div class="container">
         <header>
-            <div class="logo-wrap">
-                <img src="Untitled-design.jpg" alt="Thrive Outdoor Solutions Logo">
+            <div class="brand">
+                <img src="Untitled-design.jpg" alt="Thrive Outdoor Solutions Logo" class="brand-logo">
+                <h1>Thrive Outdoor Solutions</h1>
             </div>
-            <h1>Thrive Outdoor Solutions</h1>
             <p>Premium Gardening/Landscaping maintenance in Sunshine Coast</p>
         </header>
 
