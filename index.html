@@ -34,25 +34,47 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            padding: 40px 30px;
+            padding: 32px 24px 40px;
             margin-bottom: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            transform: translateY(0);
             animation: slideDown 0.8s ease-out;
         }
 
+        .logo-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(242,248,244,0.95));
+            box-shadow: 
+                0 12px 30px rgba(0,0,0,0.08),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+            border: 1px solid rgba(110, 140, 110, 0.15);
+            margin-bottom: 22px;
+        }
+
+        .logo-wrap img {
+            display: block;
+            width: min(420px, 88vw);
+            height: auto;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+
         header h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            background: linear-gradient(135deg, #135f4f 0%, #2e7d5b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 15px;
-            font-weight: 700;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
         }
 
         header p {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: #666;
             font-weight: 300;
         }
@@ -102,6 +124,8 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
         }
 
         .service-card::before {
@@ -236,14 +260,28 @@
             50% { transform: scale(1.02); }
         }
 
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
             }
             
             header {
-                padding: 30px 20px;
+                padding: 24px 18px 32px;
                 margin-bottom: 20px;
+            }
+
+            .logo-wrap {
+                padding: 10px;
+                border-radius: 22px;
             }
             
             .services {
@@ -260,25 +298,14 @@
                 padding: 25px;
             }
         }
-
-        .service-card:nth-child(1) { animation-delay: 0.1s; }
-        .service-card:nth-child(2) { animation-delay: 0.2s; }
-        .service-card:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .service-card {
-            animation: fadeInUp 0.6s ease-out forwards;
-            opacity: 0;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
+            <div class="logo-wrap">
+                <img src="Untitled-design.jpg" alt="Thrive Outdoor Solutions Logo">
+            </div>
             <h1>Thrive Outdoor Solutions</h1>
             <p>Premium Gardening/Landscaping maintenance in Sunshine Coast</p>
         </header>
@@ -315,15 +342,15 @@
 
             <div class="contact">
                 <p>Call or text: <span class="phone">0492 300 404</span> for a free quote!</p>
-                <p>Email: <a href="mailto:thriveoutdoorsolutions@gmail.com" style="color: rgba(255,255,255,0.9); text-decoration: none;">thriveoutdoorsolutions@gmail.com</a></p>
+                <p>Email: <a href="mailto:thriveoutdoorsolutions@gmail.com" style="color: rgba(255,255,255,0.95); text-decoration: none;">thriveoutdoorsolutions@gmail.com</a></p>
             </div>
         </section>
     </div>
 
     <footer>
         <div class="social-icons">
-            <a href="https://www.facebook.com/thriveoutdoorsolutions" target="_blank" aria-label="Facebook" style="font-family: 'Font Awesome 5 Brands', sans-serif;"></a>
-            <a href="https://www.instagram.com/thriveoutdoorsolutions" target="_blank" aria-label="Instagram" style="font-family: 'Font Awesome 5 Brands', sans-serif;"></a>
+            <a href="https://www.facebook.com/thriveoutdoorsolutions" target="_blank" aria-label="Facebook">f</a>
+            <a href="https://www.instagram.com/thriveoutdoorsolutions" target="_blank" aria-label="Instagram">⌁</a>
             <a href="mailto:thriveoutdoorsolutions@gmail.com" aria-label="Email">✉</a>
         </div>
         <div class="copyright">
