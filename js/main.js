@@ -71,3 +71,112 @@
     sms.href = 'sms:' + PHONE + sep + 'body=' + encodeURIComponent("Hi, I'd like a quote for some gardening.");
   }
 })();
+
+// Hero slideshow: slow crossfade + gentle zoom. Extra slides load after the page has loaded.
+(function () {
+  var root = document.querySelector('.slideshow');
+  if (!root) return;
+  var slides = [].slice.call(root.querySelectorAll('.slide'));
+  var caption = root.querySelector('figcaption');
+  if (slides.length < 2) return;
+
+  var INTERVAL = 5500, FADE = 1400;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cur = 0, timer = null, leaveTimer = null, capTimer = null;
+  var paused = reduce, inView = true, revealed = false;
+
+  // Dots (built here so the no-JS page just shows the first photo)
+  var nav = document.createElement('div');
+  nav.className = 'slide-dots';
+  nav.setAttribute('role', 'group');
+  nav.setAttribute('aria-label', 'Choose a photo');
+  var dots = slides.map(function (s, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Show photo ' + (i + 1) + ' of ' + slides.length + ': ' + s.getAttribute('data-caption'));
+    if (i === 0) b.setAttribute('aria-current', 'true');
+    b.addEventListener('click', function () { reveal(); go(i); schedule(); });
+    nav.appendChild(b);
+    return b;
+  });
+  var pauseBtn = null;
+  if (!reduce) {
+    pauseBtn = document.createElement('button');
+    pauseBtn.type = 'button';
+    pauseBtn.className = 'slide-pause';
+    nav.insertBefore(pauseBtn, nav.firstChild);
+    pauseBtn.addEventListener('click', function () { paused = !paused; setPauseIcon(); schedule(); });
+    setPauseIcon();
+  }
+  function setPauseIcon() {
+    pauseBtn.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
+    pauseBtn.innerHTML = paused
+      ? '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z"/></svg>'
+      : '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg>';
+  }
+  root.appendChild(nav);
+
+  function loaded(i) {
+    var img = slides[i].querySelector('img');
+    return !slides[i].hidden && img && img.complete && img.naturalWidth > 0;
+  }
+
+  function go(n) {
+    if (n === cur) return;
+    var prev = cur;
+    slides.forEach(function (s) { s.classList.remove('is-leaving'); });
+    slides[prev].classList.remove('is-active');
+    slides[prev].classList.add('is-leaving'); // stays opaque underneath while the next fades in
+    slides[n].classList.add('is-active');
+    dots[prev].removeAttribute('aria-current');
+    dots[n].setAttribute('aria-current', 'true');
+    cur = n;
+    clearTimeout(leaveTimer);
+    leaveTimer = setTimeout(function () { slides[prev].classList.remove('is-leaving'); }, FADE + 100);
+    if (caption) {
+      var text = slides[n].getAttribute('data-caption');
+      clearTimeout(capTimer);
+      caption.classList.add('is-fading');
+      capTimer = setTimeout(function () { caption.textContent = text; caption.classList.remove('is-fading'); }, reduce ? 0 : 350);
+    }
+  }
+
+  function next() {
+    for (var k = 1; k < slides.length; k++) {
+      var n = (cur + k) % slides.length;
+      if (loaded(n)) { go(n); break; } // skip photos that haven't arrived yet
+    }
+    schedule();
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    timer = null;
+    if (paused || reduce || document.hidden || !inView) return;
+    timer = setTimeout(next, INTERVAL);
+  }
+
+  // Un-hide the extra slides only after the page (and hero photo) has loaded,
+  // so their lazy images never compete with first paint.
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    slides.forEach(function (s) { s.hidden = false; });
+  }
+  if (document.readyState === 'complete') reveal();
+  else window.addEventListener('load', reveal);
+
+  document.addEventListener('visibilitychange', schedule);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      inView = entries[0].isIntersecting;
+      schedule();
+    }).observe(root);
+  }
+
+  // Start the slow zoom on the first photo, then the timer
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { root.classList.add('is-live'); });
+  });
+  schedule();
+})();
