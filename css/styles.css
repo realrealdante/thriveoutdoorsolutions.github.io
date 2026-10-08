@@ -82,7 +82,7 @@ p { margin: 0; }
 /* Hero */
 .hero { padding: 48px 0 72px; }
 .hero-grid { display: grid; gap: 40px; }
-.hero h1 { font-size: clamp(2.3rem, 7vw, 4rem); max-width: 14ch; }
+.hero h1 { font-size: clamp(1.9rem, 7.8vw, 4rem); max-width: 20ch; text-wrap: balance; }
 .lede { margin-top: 20px; font-size: 1.125rem; color: var(--muted); max-width: 46ch; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero .fine { margin-top: 20px; }
@@ -233,4 +233,39 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { transition: none !important; }
+}
+
+/* Hero subheading */
+.hero-sub { margin-top: 18px; font-size: clamp(1.15rem, 2.6vw, 1.4rem); font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+.hero-sub + .lede { margin-top: 10px; }
+
+/* Reviews */
+.stars { color: var(--accent-2); letter-spacing: .12em; line-height: 1; }
+.reviews-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; }
+.rating { display: flex; align-items: center; gap: 10px; font-size: .95rem; }
+.rating strong { font-weight: 700; color: var(--text); }
+.reviews { display: grid; gap: 16px; }
+.review {
+  margin: 0; display: flex; flex-direction: column; gap: 14px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
+}
+.review .stars { font-size: .95rem; }
+.review blockquote { margin: 0; color: var(--text); font-size: .975rem; line-height: 1.6; }
+.review figcaption { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; font-size: .9rem; }
+.review figcaption strong { font-weight: 600; }
+.review figcaption span { color: var(--muted); font-size: .8rem; }
+.reviews-actions { margin-top: 28px; }
+
+/* Service areas */
+.areas { margin: 0 0 10px; display: grid; }
+.areas div { display: flex; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.areas div:first-child { border-top: 1px solid var(--line); }
+.areas dt { width: 104px; flex: none; font-size: .78rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); padding-top: 2px; }
+.areas dd { margin: 0; color: var(--text); }
+.area { max-width: none; }
+.area h3.eyebrow { font-size: .78rem; line-height: 1.65; letter-spacing: .14em; margin-bottom: 10px; }
+
+@media (min-width: 900px) {
+  .reviews { grid-template-columns: repeat(3, 1fr); }
+  .hero h1 { font-size: clamp(2.4rem, 3.8vw, 3rem); }
 }
