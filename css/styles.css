@@ -189,6 +189,11 @@ p { margin: 0; }
 .field input::placeholder, .field textarea::placeholder { color: #7f8a83; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(140, 199, 159, .2); }
 .form-note { text-align: center; }
+.form-note.is-success, .form-note.is-error { font-size: 1rem; padding: 14px 16px; border-radius: 12px; color: var(--text); }
+.form-note.is-success { background: rgba(140,199,159,.14); border: 1px solid var(--accent); }
+.form-note.is-error { background: rgba(230,120,110,.12); border: 1px solid #e6786e; }
+.form-note a { color: var(--accent); }
+.btn.is-sent { opacity: .7; pointer-events: none; }
 
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); padding: 48px 0 40px; }
