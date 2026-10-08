@@ -6,6 +6,25 @@
   var y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
+  // Always open at the top: drop any #section left in the URL and don't restore old scroll position
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  window.scrollTo(0, 0);
+  window.addEventListener('pageshow', function (e) { if (!e.persisted) window.scrollTo(0, 0); });
+
+  // In-page links scroll smoothly without adding #section to the URL
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    var t = id ? document.getElementById(id) : null;
+    if (!t) return;
+    e.preventDefault();
+    t.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
+    t.focus({ preventScroll: true });
+  });
+
   var form = document.getElementById('quote-form');
   if (!form) return;
 
