@@ -12,6 +12,13 @@
   var ENDPOINT = 'https://formsubmit.co/ajax/' + EMAIL;
   var note = document.getElementById('form-note');
   var btn = form.querySelector('button[type="submit"], button:not([type])');
+  function show(msg, kind) {
+    if (!note) return;
+    note.innerHTML = msg;
+    note.className = 'fine form-note' + (kind ? ' is-' + kind : '');
+    note.setAttribute('role', kind === 'error' ? 'alert' : 'status');
+    note.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
   var fallback = 'Email <a href="mailto:' + EMAIL + '">' + EMAIL + '</a> or call/text <a href="tel:' + PHONE + '">0492 300 404</a>.';
 
   form.addEventListener('submit', function (e) {
@@ -20,7 +27,7 @@
     var v = function (n) { return (form.elements[n] && form.elements[n].value || '').trim(); };
     if (v('_honey')) return; // bot trap
     if (!v('phone') && !v('email')) {
-      if (note) note.innerHTML = 'Please add a phone number or email so I can get back to you.';
+      show('Please add a phone number or email so I can get back to you.', 'error');
       return;
     }
     var service = v('service');
@@ -46,10 +53,11 @@
       .then(function (res) {
         if (!res.ok || String(res.j.success) !== 'true') throw new Error(res.j.message || 'failed');
         form.reset();
-        if (note) note.innerHTML = '<strong>Thanks, your request has been sent!</strong> I\'ll be in touch soon. Need me sooner? Call or text <a href="tel:' + PHONE + '">0492 300 404</a>.';
+        show('<strong>✓ Thanks, your request has been sent!</strong> I\'ll be in touch soon. Need me sooner? Call or text <a href="tel:' + PHONE + '">0492 300 404</a>.', 'success');
+        if (btn) { btn.dataset.label = 'Sent ✓'; btn.classList.add('is-sent'); }
       })
       .catch(function () {
-        if (note) note.innerHTML = 'Sorry, that didn\'t send. ' + fallback;
+        show('Sorry, that didn\'t send. ' + fallback, 'error');
       })
       .then(function () {
         if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || 'Send quote request'; }
