@@ -1,32 +1,41 @@
 name: Deploy to GitHub Pages
 
+# GitHub Pages for this repository publishes the root of main
+# (source: branch "main", path "/"). A push to main is what updates
+# https://www.thriveoutdoorsolutions.com.au. The custom domain comes
+# from the root CNAME file.
+#
+# There is no Jekyll or SCSS build. .nojekyll tells the Pages legacy
+# builder to copy these static files as-is.
+#
+# The previous workflow copied the tree with `cp -r *` (which skips
+# dotfiles such as .nojekyll) and tried to push that copy back onto
+# this same repository with peaceiris/actions-gh-pages. That job failed
+# on every push. A successful run would have dropped .nojekyll and
+# removed .github from main. This workflow only checks that the files
+# Pages will publish are present.
+
 on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
-      - name: Copy files to dist
+      - name: Check static site for Pages
         run: |
-          mkdir dist
-          cp -r * dist
-          rm -rf dist/.git dist/.github
-
-      - name: Preserve CNAME for custom domain
-        run: |
-          if [ -f CNAME ]; then cp CNAME dist/; fi
-
-      - name: Deploy to public GitHub Pages repo
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          external_repository: realrealdante/thriveoutdoorsolutions.github.io
-          publish_branch: main
-
+          set -eu
+          test -f index.html
+          test -f .nojekyll
+          test -f CNAME
+          test -f css/styles.css
+          test -f js/main.js
+          grep -qx 'www.thriveoutdoorsolutions.com.au' CNAME
+          echo "Static root is ready. GitHub Pages publishes this branch root."
