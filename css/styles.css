@@ -269,3 +269,4 @@ p { margin: 0; }
   .reviews { grid-template-columns: repeat(3, 1fr); }
   .hero h1 { font-size: clamp(2.4rem, 3.8vw, 3rem); }
 }
+.area-line { margin: 0 0 6px; color: var(--text); font-size: 1.05rem; }
