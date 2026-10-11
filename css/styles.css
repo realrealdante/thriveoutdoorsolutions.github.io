@@ -315,3 +315,121 @@ p { margin: 0; }
 .footer-trust { margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; font-size: .85rem; color: var(--muted); }
 .footer-trust span { display: inline-flex; align-items: center; gap: 6px; }
 .footer-trust svg { color: var(--accent); }
+
+/* ==========================================================================
+   v10 motion & polish. Existing colour variables only (rgba = --bg/--accent).
+   Hidden reveal states apply only to .rv, which js/main.js adds below the fold.
+   ========================================================================== */
+:root { --ease: cubic-bezier(.2, .8, .2, 1); --spring: cubic-bezier(.34, 1.45, .64, 1); --glow: rgba(140, 199, 159, .3); }
+
+/* Frosted header (solid fallback first) */
+.site-header {
+  background: rgba(14, 20, 17, .95); border-bottom-color: rgba(36, 49, 42, .6);
+  transition: background-color .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
+}
+.site-header.is-scrolled { background: rgba(14, 20, 17, .98); border-bottom-color: var(--line); box-shadow: 0 8px 24px -14px rgba(0, 0, 0, .7); }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header, .site-header.is-scrolled { background: rgba(14, 20, 17, .55); -webkit-backdrop-filter: saturate(180%) blur(16px); backdrop-filter: saturate(180%) blur(16px); }
+  .site-header.is-far { background: rgba(14, 20, 17, .75); }
+}
+.brand img { transform-origin: left center; transition: transform .5s var(--ease); }
+.site-header.is-scrolled .brand img { transform: scale(.9); }
+
+/* Nav scrollspy: active colour + sliding underline (.nav-ink added by JS) */
+.nav { position: relative; }
+.nav a { transition: color .3s var(--ease); }
+.nav a.is-active { color: var(--accent); }
+.nav-ink {
+  position: absolute; left: 0; bottom: -6px; height: 2px; width: 0; border-radius: 2px;
+  background: var(--accent); opacity: 0; pointer-events: none;
+  transition: transform .55s var(--spring), width .55s var(--spring), opacity .3s var(--ease);
+}
+.nav.has-active .nav-ink { opacity: 1; }
+
+/* Springy buttons */
+.btn {
+  position: relative; -webkit-tap-highlight-color: transparent;
+  transition: background-color .15s, color .15s, border-color .15s, transform .5s var(--spring), box-shadow .35s var(--ease);
+}
+@media (hover: hover) {
+  .btn:hover { box-shadow: 0 8px 22px -8px var(--glow), 0 0 0 4px rgba(140, 199, 159, .07); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn:hover { transform: translateY(-1px); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn:active { transform: scale(.96); transition: transform .12s var(--ease), box-shadow .2s var(--ease), background-color .15s; }
+  .js .site-header .btn-sm { animation: callPulse 1.8s var(--ease) 1.2s 1; }
+}
+@keyframes callPulse { 0% { box-shadow: 0 0 0 0 rgba(140, 199, 159, .5); } 70%, 100% { box-shadow: 0 0 0 12px rgba(140, 199, 159, 0); } }
+
+/* Submit states: spinner while sending (width kept), pop on success */
+.btn.is-loading { color: transparent !important; pointer-events: none; cursor: progress; }
+.btn.is-loading::after {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px;
+  border: 2px solid rgba(11, 19, 14, .25); border-top-color: var(--accent-ink); border-radius: 50%;
+  animation: btnSpin .7s linear infinite;
+}
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+.btn.is-sent { opacity: 1; box-shadow: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .btn.is-sent { animation: btnPop .75s var(--ease); }
+  .form-note.is-success, .form-note.is-error { animation: noteIn .5s var(--ease); }
+}
+@keyframes btnPop {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(140, 199, 159, .6); }
+  30% { transform: scale(1.08); }
+  55% { transform: scale(.98); }
+  75% { transform: scale(1.01); }
+  100% { transform: scale(1); box-shadow: 0 0 0 20px rgba(140, 199, 159, 0); }
+}
+@keyframes noteIn { from { opacity: 0; transform: translateY(6px); } }
+
+/* Lift-up cards */
+.service, .review { transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .4s var(--ease); }
+@media (hover: hover) {
+  .service:hover, .review:hover { border-color: rgba(140, 199, 159, .32); box-shadow: 0 18px 40px -20px rgba(0, 0, 0, .75); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .service:hover, .review:hover { transform: translateY(-3px); }
+}
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .service:active, .review:active { transform: scale(.99); border-color: rgba(140, 199, 159, .32); }
+}
+.rates dt, .rates dd { transition: color .3s var(--ease); }
+.rates div:hover dt { color: var(--text); }
+.rates div:hover dd { color: var(--accent); }
+
+/* Animated underline on text links */
+.service-foot a { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .4s var(--ease), color .15s; }
+.service-foot a:hover { background-size: 100% 1px; }
+
+/* Live form fields */
+.field { position: relative; }
+.field input, .field select, .field textarea { transition: border-color .3s var(--ease), box-shadow .3s var(--ease), color .45s var(--ease); }
+.field input::placeholder, .field textarea::placeholder { transition: color .45s var(--ease); }
+/* soft reset after success (class set by JS): values fade out before the form clears */
+.form.is-clearing .field input, .form.is-clearing .field select, .form.is-clearing .field textarea,
+.form.is-clearing .field ::placeholder { color: transparent; }
+.form.is-clearing .field.is-valid input { border-color: #34443b; }
+.form.is-clearing .field::after { opacity: 0; }
+.field.is-valid input { border-color: rgba(140, 199, 159, .7); padding-right: 42px; }
+.field.is-invalid input, .field.is-invalid input:focus { border-color: #e6786e; padding-right: 42px; }
+.field.is-invalid input:focus { box-shadow: 0 0 0 3px rgba(230, 120, 110, .2); }
+.field::after {
+  content: ""; position: absolute; right: 14px; bottom: 15px; width: 16px; height: 16px;
+  background: var(--accent); pointer-events: none; opacity: 0; transform: scale(.4);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3L13 4.5' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3L13 4.5' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: opacity .25s var(--ease), transform .45s var(--spring);
+}
+.field.is-valid::after { opacity: 1; transform: none; }
+
+/* Scroll reveal (JS-set classes only) */
+.js .rv { opacity: 0; translate: 0 24px; }
+.js .rv.rv-in { opacity: 1; translate: none; transition: opacity .7s var(--ease) var(--rv-d, 0ms), translate .7s var(--ease) var(--rv-d, 0ms); }
+@media (prefers-reduced-motion: reduce) {
+  .js .rv { opacity: 1; translate: none; }
+  .hero-media { transform: none !important; }
+}
+@media print { .js .rv { opacity: 1 !important; translate: none !important; } }
