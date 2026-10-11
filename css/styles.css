@@ -312,3 +312,6 @@ p { margin: 0; }
   .hero h1 { font-size: clamp(2.4rem, 3.8vw, 3rem); }
 }
 .area-line { margin: 0 0 6px; color: var(--text); font-size: 1.05rem; }
+.footer-trust { margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; font-size: .85rem; color: var(--muted); }
+.footer-trust span { display: inline-flex; align-items: center; gap: 6px; }
+.footer-trust svg { color: var(--accent); }
