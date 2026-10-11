@@ -94,57 +94,64 @@
   }
 })();
 
-// Variant B (v12): living background. One fixed photo layer sits behind the whole page; the six
-// photos dissolve one into the next across the full page scroll (slow scroll = slow dissolve,
+// Variant B living background (v12, perf pass v13). One fixed photo layer sits behind the whole page;
+// the six photos dissolve one into the next across the full page scroll (slow scroll = slow dissolve,
 // scrolling back reverses). Earlier photos stay opaque underneath, so there is never a dark dip.
-// The scrim darkens over the first screen. Opacity only (cheap on phones), no zoom.
+// v13: a blurred placeholder covers the first photo until it has decoded, then dissolves (no rough pop-in); the other
+// photos are only un-hidden (so their lazy <img> starts loading) after the first is showing, one or two
+// ahead of the scroll position; will-change only on the pair being crossfaded; opacity only, no zoom.
 (function () {
   var root = document.querySelector('.slideshow');
   if (!root) return;
-  var caption = root.querySelector('figcaption');
   var slides = [].slice.call(root.querySelectorAll('.slide')), N = slides.length;
   var imgs = slides.map(function (s) { return s.querySelector('img'); });
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var de = document.documentElement;
 
-  if (reduce || N < 2) return; // static first photo behind the hero
-  // Later photos un-hide after load so they never compete with the first paint (LCP)
-  function reveal() { slides.forEach(function (s) { s.hidden = false; }); onScroll(); }
+  // 1. First photo: drop the placeholder once the photo is fully decoded (CSS skips the fade under reduced motion)
+  var first = imgs[0], firstShown = false, loaded = document.readyState === 'complete', after = [];
+  function shown() { if (firstShown) return; firstShown = true; root.querySelector('.slides').classList.add('is-in'); setTimeout(go, reduce ? 0 : 550); }
+  function go() { while (after.length) after.shift()(); }
+  function whenReady(fn) { if (firstShown && loaded) fn(); else after.push(fn); }
+  if (first) {
+    var dec = function () { (first.decode ? first.decode() : Promise.resolve()).then(shown, shown); };
+    if (first.complete && first.naturalWidth) dec(); else { first.addEventListener('load', dec); first.addEventListener('error', shown); }
+  }
+  window.addEventListener('load', function () { loaded = true; if (firstShown) go(); });
 
-  var max = 1, vh = 1, shown = 0, capTimer = null, ticking = false, last = [];
+  if (reduce || N < 2) return; // static first photo behind the hero
+
+  var max = 1, vh = 1, ticking = false, last = [], wc = [], ready = false;
   function measure() { vh = window.innerHeight; max = Math.max(1, de.scrollHeight - vh); }
   function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
-  function set(el, prop, v) { if (el.style[prop] !== v) el.style[prop] = v; }
 
   function frame() {
     ticking = false;
-    var y = window.scrollY, s = clamp(y / max) * (N - 1), top = 0;
-    shown = 0;
+    var y = window.scrollY, s = clamp(y / max) * (N - 1), top = 0, k = Math.floor(s);
+    // un-hide (= start loading) each photo about half a photo-length before its dissolve begins
+    if (ready) for (var h = 1; h < N && h <= Math.floor(s + 1.3); h++) if (slides[h].hidden) slides[h].hidden = false;
     for (var i = 1; i < N; i++) {
       var o = clamp((s - (i - 1) - 0.2) / 0.6); // hold each photo a little, then dissolve
       o = o * o * (3 - 2 * o);                  // smoothstep
       if (o !== last[i]) { slides[i].style.opacity = o; last[i] = o; }
       if (o === 1 && imgs[i].complete && imgs[i].naturalWidth) top = i;
-      if (o > 0.5) shown = i;
     }
-    for (var j = 0; j < N; j++) set(slides[j], 'visibility', j < top ? 'hidden' : '');
+    for (var j = 0; j < N; j++) {
+      var v = j < top ? 'hidden' : '', w = (j === k || j === k + 1) && j > 0 ? 'opacity' : 'auto';
+      if (slides[j].style.visibility !== v) slides[j].style.visibility = v;
+      if (wc[j] !== w) { slides[j].style.willChange = w; wc[j] = w; }
+    }
     root.style.setProperty('--dim', clamp(y / (vh * 0.9)).toFixed(3));
-    root.style.setProperty('--cap', (1 - clamp((y - vh * 0.3) / (vh * 0.4))).toFixed(3));
-    if (caption && caption.getAttribute('data-for') !== String(shown)) {
-      caption.setAttribute('data-for', shown);
-      var text = slides[shown].getAttribute('data-caption');
-      clearTimeout(capTimer);
-      caption.classList.add('is-fading');
-      capTimer = setTimeout(function () { caption.textContent = text; caption.classList.remove('is-fading'); }, 300);
-    }
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
-  if (caption) caption.setAttribute('data-for', '0');
   imgs.forEach(function (img) { img.addEventListener('load', onScroll); });
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () { measure(); onScroll(); }, { passive: true });
-  window.addEventListener('load', function () { measure(); reveal(); });
-  if (document.readyState === 'complete') reveal();
+  whenReady(function () {
+    measure(); ready = true;
+    var next = function () { if (slides[1].hidden) slides[1].hidden = false; onScroll(); };
+    if (window.requestIdleCallback) requestIdleCallback(next, { timeout: 1500 }); else setTimeout(next, 200);
+  });
   measure();
   frame();
 })();

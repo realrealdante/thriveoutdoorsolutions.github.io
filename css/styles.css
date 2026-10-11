@@ -57,8 +57,8 @@ p { margin: 0; }
   transition: background-color .15s, color .15s, border-color .15s;
 }
 .btn:hover { background: #a6d6b5; border-color: #a6d6b5; color: var(--accent-ink); }
-.btn-ghost { background: transparent; color: var(--text); border-color: var(--line); }
-.btn-ghost:hover { background: transparent; border-color: var(--accent); color: var(--accent); }
+.btn-ghost { background: rgba(14, 20, 17, .78); color: var(--text); border-color: rgba(232, 236, 230, .8); }
+.btn-ghost:hover { background: rgba(14, 20, 17, .88); border-color: var(--accent); color: var(--accent); }
 .btn-sm { min-height: 40px; padding: 0 16px; font-size: .95rem; }
 .btn-block { width: 100%; }
 
@@ -87,13 +87,6 @@ p { margin: 0; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero .fine { margin-top: 20px; }
 .hero-media { margin: 0; position: relative; }
-.hero-media figcaption {
-  position: absolute; left: 12px; bottom: 12px; z-index: 3;
-  font-size: .8rem; color: var(--text);
-  background: rgba(14, 20, 17, .75); padding: 4px 10px; border-radius: 999px;
-  transition: opacity .35s ease;
-}
-.hero-media figcaption.is-fading { opacity: 0; }
 
 /* Sections */
 .section { padding: 80px 0; border-top: 1px solid var(--line); }
@@ -401,7 +394,7 @@ p { margin: 0; }
   position: relative; z-index: 1;
   min-height: 88vh; min-height: 88svh; padding: 120px 20px 88px;
   display: flex; flex-direction: column; justify-content: center;
-  text-align: center; text-shadow: 0 1px 24px rgba(14, 20, 17, .55);
+  text-align: center; text-shadow: 0 1px 2px rgba(14, 20, 17, .6), 0 1px 24px rgba(14, 20, 17, .7);
 }
 .hero h1, .hero .lede { margin-inline: auto; }
 .hero .actions { justify-content: center; }
@@ -413,25 +406,22 @@ p { margin: 0; }
 /* Photo layer (default: behind the hero only) */
 .hero-media { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: var(--bg); }
 .hero-media .slides { position: absolute; inset: 0; }
-.hero-media .slide { position: absolute; inset: 0; opacity: 0; will-change: opacity; }
+.hero-media .slide { position: absolute; inset: 0; opacity: 0; }
 .hero-media .slide:first-child { opacity: 1; }
 .hero-media .slide img { width: 100%; height: 100%; object-fit: cover; }
 .hero-media::before, .hero-media::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.hero-media::before { /* base scrim: lighter in the middle, --bg at the edges */
+.hero-media::before { /* base scrim: lighter in the middle, --bg at the edges (v13: a little darker) */
   background:
-    radial-gradient(ellipse 75% 60% at 50% 50%, rgba(14, 20, 17, .6), rgba(14, 20, 17, .25) 75%),
-    linear-gradient(to bottom, rgba(14, 20, 17, .6) 0, rgba(14, 20, 17, .15) 25%, rgba(14, 20, 17, .15) 65%, rgba(14, 20, 17, .75) 100%);
+    radial-gradient(ellipse 75% 60% at 50% 50%, rgba(14, 20, 17, .72), rgba(14, 20, 17, .34) 75%),
+    linear-gradient(to bottom, rgba(14, 20, 17, .6) 0, rgba(14, 20, 17, .2) 25%, rgba(14, 20, 17, .2) 65%, rgba(14, 20, 17, .78) 100%);
 }
-.hero-media figcaption { left: max(20px, calc((100% - 1120px) / 2)); bottom: 24px; padding: 5px 12px; font-size: .82rem; }
 
 /* Living background: fixed full-viewport layer behind the whole page */
 @media (prefers-reduced-motion: no-preference) {
   .js .hero-media { position: fixed; inset: 0 0 auto; height: 100vh; height: 100lvh; z-index: -1; }
-  .js .hero-media::after { background: rgba(14, 20, 17, .58); opacity: var(--dim, 1); } /* darker further down (JS sets --dim) */
-  .js .hero-media figcaption { bottom: calc(24px + 100lvh - 100svh); opacity: var(--cap, 1); transition: opacity .35s ease; }
-  .js .hero-media figcaption.is-fading { opacity: 0; }
+  .js .hero-media::after { background: rgba(14, 20, 17, .64); opacity: var(--dim, 1); } /* darker further down (JS sets --dim) */
   .js .section { background: transparent; }
-  .js .section-alt { background: rgba(18, 26, 22, .45); }
+  .js .section-alt { background: rgba(18, 26, 22, .52); }
   .js .site-footer { background: rgba(14, 20, 17, .82); }
   .js .service, .js .review, .js .form { background: rgba(22, 31, 26, .92); }
   @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -443,3 +433,35 @@ p { margin: 0; }
     }
   }
 }
+
+/* ==========================================================================
+   v13: sharper, less-zoomed photos; smooth first paint; more contrast.
+   ========================================================================== */
+/* Phones (portrait, narrower than 3:5): instead of a 9:16 crop blown up to cover the whole tall screen
+   (v12 showed ~57% of the photo width), show the whole 3:5 crop (full photo height, ~80% of its width)
+   at full width, centred vertically, with its top and bottom edges fading into the page colour.
+   The layer itself stays full-screen. Portrait tablets (3:5 to 3:4) use the same 3:5 photo with cover. */
+@media (max-aspect-ratio: 3/5) {
+  .hero-media .slide img { object-fit: contain; }
+  .hero-media .slides::after {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(to bottom, var(--bg) calc(50% - 83.333vw), rgba(14, 20, 17, 0) calc(50% - 62vw),
+      rgba(14, 20, 17, 0) calc(50% + 50vw), var(--bg) calc(50% + 83.333vw));
+  }
+}
+/* First photo: a tiny blurred placeholder of it (inline <style> in index.html) is shown at once and sits
+   on top until the real photo has loaded and decoded, then dissolves away (~0.5 s), so the photo never
+   pops in or paints in stripes. Instant under reduced motion; without JS there is no overlay. */
+.js .hero-media .slides::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: inherit;
+  transition: opacity .5s var(--ease), visibility 0s linear .5s;
+}
+.hero-media .slides.is-in::before, .bg-in .hero-media .slides::before { opacity: 0; visibility: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .js .hero-media .slides::before { transition: none; }
+}
+/* the hero text shadow is for text on the photo, not for text on the solid accent button */
+.hero .btn { text-shadow: none; }
+.hero .lede { color: #cfd6d1; } /* --muted, lifted a step for text that sits on the photo */
+/* Contrast over the photo (v12 -> v13): scrim .6/.25/.15 -> .72/.34/.2, scroll dim .58 -> .64,
+   alt panel .45 -> .52, hero text shadow tightened, ghost buttons get a dark fill + light border. */
