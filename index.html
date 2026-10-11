@@ -25,8 +25,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://www.thriveoutdoorsolutions.com.au/images/og-image-v2.jpg">
 
-  <link rel="preload" as="image" href="images/lawn-pool-720.webp" imagesrcset="images/lawn-pool-720.webp 720w, images/lawn-pool-1200.webp 1200w" imagesizes="(min-width: 900px) 46vw, 100vw" type="image/webp">
-  <link rel="stylesheet" href="css/styles.css?v=10">
+  <link rel="preload" as="image" type="image/webp" media="(max-aspect-ratio: 3/4)" href="images/show-pool-p810.webp" imagesrcset="images/show-pool-p810.webp 810w, images/show-pool-p1200.webp 1200w" imagesizes="100vw">
+  <link rel="preload" as="image" type="image/webp" media="(min-aspect-ratio: 751/1000)" href="images/show-pool-1600.webp" imagesrcset="images/show-pool-900.webp 900w, images/show-pool-1600.webp 1600w" imagesizes="100vw">
+  <link rel="stylesheet" href="css/styles.css?v=12">
+  <script>document.documentElement.classList.add('js')</script>
 
   <script type="application/ld+json">
   {
@@ -89,8 +91,8 @@
   <main id="main">
     <!-- HERO -->
     <section class="hero" id="top">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
+      <div class="hero-grid">
+        <div class="wrap hero-copy">
           <p class="eyebrow">Local gardener &middot; Hinterland &amp; coast</p>
           <h1>Garden maintenance in <span class="accent">Maleny</span> &amp; across the Sunshine Coast</h1>
           <p class="hero-sub">Gardens kept tidy, healthy and thriving.</p>
@@ -101,43 +103,55 @@
           </div>
           <p class="fine">Free quotes &middot; Call or text anytime &middot; Based in Maleny</p>
         </div>
-        <figure class="hero-media slideshow" aria-label="Photos of recent lawn and garden work">
+        <figure class="hero-media slideshow bg-b" aria-label="Photos of recent lawn and garden work">
           <div class="slides">
             <picture class="slide is-active" data-caption="Lawn care, Sunshine Coast">
-              <source type="image/webp" srcset="images/lawn-pool-720.webp 720w, images/lawn-pool-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw">
-              <img src="images/lawn-pool-720.jpg" srcset="images/lawn-pool-720.jpg 720w, images/lawn-pool-1200.jpg 1200w" sizes="(min-width: 900px) 46vw, 100vw"
-                   width="1200" height="1085" fetchpriority="high"
+              <source media="(max-aspect-ratio: 3/4)" type="image/webp" srcset="images/show-pool-p810.webp 810w, images/show-pool-p1200.webp 1200w" sizes="100vw">
+              <source media="(max-aspect-ratio: 3/4)" srcset="images/show-pool-p810.jpg 810w, images/show-pool-p1200.jpg 1200w" sizes="100vw">
+              <source type="image/webp" srcset="images/show-pool-900.webp 900w, images/show-pool-1600.webp 1600w" sizes="100vw">
+              <img src="images/show-pool-900.jpg" srcset="images/show-pool-900.jpg 900w, images/show-pool-1600.jpg 1600w" sizes="100vw"
+                   width="1600" height="900" fetchpriority="high"
                    alt="Freshly mown, striped green lawn framed by stone paving next to a glass-fenced pool">
             </picture>
-            <!-- Extra slides: hidden until the page has loaded, then main.js reveals them (lazy-loaded) -->
+            <!-- Extra photos: hidden until the page has loaded, then main.js reveals them (lazy-loaded); scroll position picks the photo -->
             <picture class="slide" data-caption="Lawn care" hidden>
-              <source type="image/webp" srcset="images/hero-house-720.webp 720w, images/hero-house-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw">
-              <img src="images/hero-house-720.jpg" srcset="images/hero-house-720.jpg 720w, images/hero-house-1200.jpg 1200w" sizes="(min-width: 900px) 46vw, 100vw"
-                   width="1200" height="1085" loading="lazy" decoding="async"
+              <source media="(max-aspect-ratio: 3/4)" type="image/webp" srcset="images/show-house-p810.webp 810w, images/show-house-p1200.webp 1200w" sizes="100vw">
+              <source media="(max-aspect-ratio: 3/4)" srcset="images/show-house-p810.jpg 810w, images/show-house-p1200.jpg 1200w" sizes="100vw">
+              <source type="image/webp" srcset="images/show-house-900.webp 900w, images/show-house-1600.webp 1600w" sizes="100vw">
+              <img src="images/show-house-900.jpg" srcset="images/show-house-900.jpg 900w, images/show-house-1600.jpg 1600w" sizes="100vw"
+                   width="1600" height="900" loading="lazy" decoding="async"
                    alt="Neat green lawn with round stepping stones and a large boulder in the courtyard of a modern house">
             </picture>
             <picture class="slide" data-caption="Garden beds &amp; natives" hidden>
-              <source type="image/webp" srcset="images/hero-path-720.webp 720w, images/hero-path-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw">
-              <img src="images/hero-path-720.jpg" srcset="images/hero-path-720.jpg 720w, images/hero-path-1200.jpg 1200w" sizes="(min-width: 900px) 46vw, 100vw"
-                   width="1200" height="1085" loading="lazy" decoding="async"
+              <source media="(max-aspect-ratio: 3/4)" type="image/webp" srcset="images/show-path-p810.webp 810w, images/show-path-p1200.webp 1200w" sizes="100vw">
+              <source media="(max-aspect-ratio: 3/4)" srcset="images/show-path-p810.jpg 810w, images/show-path-p1200.jpg 1200w" sizes="100vw">
+              <source type="image/webp" srcset="images/show-path-900.webp 900w, images/show-path-1600.webp 1600w" sizes="100vw">
+              <img src="images/show-path-900.jpg" srcset="images/show-path-900.jpg 900w, images/show-path-1600.jpg 1600w" sizes="100vw"
+                   width="1600" height="900" loading="lazy" decoding="async"
                    alt="Concrete path curving past a native garden bed with sandstone boulders and tufted grasses">
             </picture>
             <picture class="slide" data-caption="Lawns &amp; paving" hidden>
-              <source type="image/webp" srcset="images/hero-paving-720.webp 720w, images/hero-paving-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw">
-              <img src="images/hero-paving-720.jpg" srcset="images/hero-paving-720.jpg 720w, images/hero-paving-1200.jpg 1200w" sizes="(min-width: 900px) 46vw, 100vw"
-                   width="1200" height="1085" loading="lazy" decoding="async"
+              <source media="(max-aspect-ratio: 3/4)" type="image/webp" srcset="images/show-paving-p810.webp 810w, images/show-paving-p1200.webp 1200w" sizes="100vw">
+              <source media="(max-aspect-ratio: 3/4)" srcset="images/show-paving-p810.jpg 810w, images/show-paving-p1200.jpg 1200w" sizes="100vw">
+              <source type="image/webp" srcset="images/show-paving-900.webp 900w, images/show-paving-1600.webp 1600w" sizes="100vw">
+              <img src="images/show-paving-900.jpg" srcset="images/show-paving-900.jpg 900w, images/show-paving-1600.jpg 1600w" sizes="100vw"
+                   width="1600" height="900" loading="lazy" decoding="async"
                    alt="Stepping-stone pavers set into a fresh green lawn in a tropical garden with palms and a timber bench">
             </picture>
             <picture class="slide" data-caption="Hedges &amp; lawns" hidden>
-              <source type="image/webp" srcset="images/hero-hedges-720.webp 720w, images/hero-hedges-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw">
-              <img src="images/hero-hedges-720.jpg" srcset="images/hero-hedges-720.jpg 720w, images/hero-hedges-1200.jpg 1200w" sizes="(min-width: 900px) 46vw, 100vw"
-                   width="1200" height="1085" loading="lazy" decoding="async"
+              <source media="(max-aspect-ratio: 3/4)" type="image/webp" srcset="images/show-hedges-p810.webp 810w, images/show-hedges-p1200.webp 1200w" sizes="100vw">
+              <source media="(max-aspect-ratio: 3/4)" srcset="images/show-hedges-p810.jpg 810w, images/show-hedges-p1200.jpg 1200w" sizes="100vw">
+              <source type="image/webp" srcset="images/show-hedges-900.webp 900w, images/show-hedges-1600.webp 1600w" sizes="100vw">
+              <img src="images/show-hedges-900.jpg" srcset="images/show-hedges-900.jpg 900w, images/show-hedges-1600.jpg 1600w" sizes="100vw"
+                   width="1600" height="900" loading="lazy" decoding="async"
                    alt="Large mown lawn following a curving line of clipped hedges, with palms and trees behind">
             </picture>
             <picture class="slide" data-caption="New turf laid" hidden>
-              <source type="image/webp" srcset="images/hero-street-720.webp 720w, images/hero-street-1200.webp 1200w" sizes="(min-width: 900px) 46vw, 100vw">
-              <img src="images/hero-street-720.jpg" srcset="images/hero-street-720.jpg 720w, images/hero-street-1200.jpg 1200w" sizes="(min-width: 900px) 46vw, 100vw"
-                   width="1200" height="1085" loading="lazy" decoding="async"
+              <source media="(max-aspect-ratio: 3/4)" type="image/webp" srcset="images/show-street-p810.webp 810w, images/show-street-p1200.webp 1200w" sizes="100vw">
+              <source media="(max-aspect-ratio: 3/4)" srcset="images/show-street-p810.jpg 810w, images/show-street-p1200.jpg 1200w" sizes="100vw">
+              <source type="image/webp" srcset="images/show-street-900.webp 900w, images/show-street-1600.webp 1600w" sizes="100vw">
+              <img src="images/show-street-900.jpg" srcset="images/show-street-900.jpg 900w, images/show-street-1600.jpg 1600w" sizes="100vw"
+                   width="1600" height="900" loading="lazy" decoding="async"
                    alt="Freshly laid turf across two front lawns beside a footpath on a suburban street">
             </picture>
           </div>
@@ -364,6 +378,6 @@
     </div>
   </footer>
 
-  <script src="js/main.js?v=10" defer></script>
+  <script src="js/main.js?v=12" defer></script>
 </body>
 </html>

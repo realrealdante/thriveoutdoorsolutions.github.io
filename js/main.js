@@ -94,117 +94,63 @@
   }
 })();
 
-// Hero slideshow: slow crossfade + gentle zoom. Extra slides load after the page has loaded.
+// Variant B (v12): living background. One fixed photo layer sits behind the whole page; the six
+// photos dissolve one into the next across the full page scroll (slow scroll = slow dissolve,
+// scrolling back reverses). Earlier photos stay opaque underneath, so there is never a dark dip.
+// The scrim darkens over the first screen. Opacity only (cheap on phones), no zoom.
 (function () {
   var root = document.querySelector('.slideshow');
   if (!root) return;
-  var slides = [].slice.call(root.querySelectorAll('.slide'));
   var caption = root.querySelector('figcaption');
-  if (slides.length < 2) return;
-
-  var INTERVAL = 5500, FADE = 1400;
+  var slides = [].slice.call(root.querySelectorAll('.slide')), N = slides.length;
+  var imgs = slides.map(function (s) { return s.querySelector('img'); });
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var cur = 0, timer = null, leaveTimer = null, capTimer = null;
-  var paused = reduce, inView = true, revealed = false;
+  var de = document.documentElement;
 
-  // Dots (built here so the no-JS page just shows the first photo)
-  var nav = document.createElement('div');
-  nav.className = 'slide-dots';
-  nav.setAttribute('role', 'group');
-  nav.setAttribute('aria-label', 'Choose a photo');
-  var dots = slides.map(function (s, i) {
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.setAttribute('aria-label', 'Show photo ' + (i + 1) + ' of ' + slides.length + ': ' + s.getAttribute('data-caption'));
-    if (i === 0) b.setAttribute('aria-current', 'true');
-    b.addEventListener('click', function () { reveal(); go(i); schedule(); });
-    nav.appendChild(b);
-    return b;
-  });
-  var pauseBtn = null;
-  if (!reduce) {
-    pauseBtn = document.createElement('button');
-    pauseBtn.type = 'button';
-    pauseBtn.className = 'slide-pause';
-    nav.insertBefore(pauseBtn, nav.firstChild);
-    pauseBtn.addEventListener('click', function () { paused = !paused; setPauseIcon(); schedule(); });
-    setPauseIcon();
-  }
-  function setPauseIcon() {
-    pauseBtn.setAttribute('aria-label', paused ? 'Play slideshow' : 'Pause slideshow');
-    pauseBtn.innerHTML = paused
-      ? '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1l7 4-7 4z"/></svg>'
-      : '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg>';
-  }
-  root.appendChild(nav);
+  if (reduce || N < 2) return; // static first photo behind the hero
+  // Later photos un-hide after load so they never compete with the first paint (LCP)
+  function reveal() { slides.forEach(function (s) { s.hidden = false; }); onScroll(); }
 
-  function loaded(i) {
-    var img = slides[i].querySelector('img');
-    return !slides[i].hidden && img && img.complete && img.naturalWidth > 0;
-  }
+  var max = 1, vh = 1, shown = 0, capTimer = null, ticking = false, last = [];
+  function measure() { vh = window.innerHeight; max = Math.max(1, de.scrollHeight - vh); }
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function set(el, prop, v) { if (el.style[prop] !== v) el.style[prop] = v; }
 
-  function go(n) {
-    if (n === cur) return;
-    var prev = cur;
-    slides.forEach(function (s) { s.classList.remove('is-leaving'); });
-    slides[prev].classList.remove('is-active');
-    slides[prev].classList.add('is-leaving'); // stays opaque underneath while the next fades in
-    slides[n].classList.add('is-active');
-    dots[prev].removeAttribute('aria-current');
-    dots[n].setAttribute('aria-current', 'true');
-    cur = n;
-    clearTimeout(leaveTimer);
-    leaveTimer = setTimeout(function () { slides[prev].classList.remove('is-leaving'); }, FADE + 100);
-    if (caption) {
-      var text = slides[n].getAttribute('data-caption');
+  function frame() {
+    ticking = false;
+    var y = window.scrollY, s = clamp(y / max) * (N - 1), top = 0;
+    shown = 0;
+    for (var i = 1; i < N; i++) {
+      var o = clamp((s - (i - 1) - 0.2) / 0.6); // hold each photo a little, then dissolve
+      o = o * o * (3 - 2 * o);                  // smoothstep
+      if (o !== last[i]) { slides[i].style.opacity = o; last[i] = o; }
+      if (o === 1 && imgs[i].complete && imgs[i].naturalWidth) top = i;
+      if (o > 0.5) shown = i;
+    }
+    for (var j = 0; j < N; j++) set(slides[j], 'visibility', j < top ? 'hidden' : '');
+    root.style.setProperty('--dim', clamp(y / (vh * 0.9)).toFixed(3));
+    root.style.setProperty('--cap', (1 - clamp((y - vh * 0.3) / (vh * 0.4))).toFixed(3));
+    if (caption && caption.getAttribute('data-for') !== String(shown)) {
+      caption.setAttribute('data-for', shown);
+      var text = slides[shown].getAttribute('data-caption');
       clearTimeout(capTimer);
       caption.classList.add('is-fading');
-      capTimer = setTimeout(function () { caption.textContent = text; caption.classList.remove('is-fading'); }, reduce ? 0 : 350);
+      capTimer = setTimeout(function () { caption.textContent = text; caption.classList.remove('is-fading'); }, 300);
     }
   }
-
-  function next() {
-    for (var k = 1; k < slides.length; k++) {
-      var n = (cur + k) % slides.length;
-      if (loaded(n)) { go(n); break; } // skip photos that haven't arrived yet
-    }
-    schedule();
-  }
-
-  function schedule() {
-    clearTimeout(timer);
-    timer = null;
-    if (paused || reduce || document.hidden || !inView) return;
-    timer = setTimeout(next, INTERVAL);
-  }
-
-  // Un-hide the extra slides only after the page (and hero photo) has loaded,
-  // so their lazy images never compete with first paint.
-  function reveal() {
-    if (revealed) return;
-    revealed = true;
-    slides.forEach(function (s) { s.hidden = false; });
-  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+  if (caption) caption.setAttribute('data-for', '0');
+  imgs.forEach(function (img) { img.addEventListener('load', onScroll); });
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { measure(); onScroll(); }, { passive: true });
+  window.addEventListener('load', function () { measure(); reveal(); });
   if (document.readyState === 'complete') reveal();
-  else window.addEventListener('load', reveal);
-
-  document.addEventListener('visibilitychange', schedule);
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      inView = entries[0].isIntersecting;
-      schedule();
-    }).observe(root);
-  }
-
-  // Start the slow zoom on the first photo, then the timer
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () { root.classList.add('is-live'); });
-  });
-  schedule();
+  measure();
+  frame();
 })();
 
 /* ==== v10 UI motion & polish (progressive enhancement, no libraries) ====
-   Reveals, header frost, hero parallax, nav scrollspy, live field ticks.
+   Reveals, header frost, nav scrollspy, live field ticks.
    No JS / reduced motion = page exactly as before. Hook above: is-loading. */
 (function () {
   var d = document, w = window, de = d.documentElement;
@@ -233,18 +179,17 @@
     });
   }
 
-  // 2. Header frost + hero parallax + scrollspy: one rAF-throttled passive listener
-  var header = d.querySelector('.site-header'), hero = d.querySelector('.hero-media');
+  // 2. Header frost + scrollspy: one rAF-throttled passive listener
+  var header = d.querySelector('.site-header');
   var nav = d.querySelector('.nav'), links = nav ? [].slice.call(nav.querySelectorAll('a[href^="#"]')) : [];
   var secs = links.map(function (a) { return d.getElementById(a.getAttribute('href').slice(1)); });
-  var ink = null, active = null, heroOn = true, heroEnd = 1, headH = 64, ticking = false;
+  var ink = null, active = null, headH = 64, ticking = false;
   if (links.length) {
     ink = nav.appendChild(d.createElement('span'));
     ink.className = 'nav-ink';
     ink.setAttribute('aria-hidden', 'true');
   }
   function measure() {
-    if (hero) heroEnd = hero.getBoundingClientRect().bottom + w.scrollY || 1;
     if (header) headH = header.offsetHeight;
   }
   function spy() {
@@ -265,19 +210,12 @@
     ticking = false;
     var y = w.scrollY;
     if (header) { header.classList.toggle('is-scrolled', y > 10); header.classList.toggle('is-far', y > w.innerHeight * 0.6); }
-    if (hero && !reduce && heroOn) {
-      var p = Math.min(Math.max(y / heroEnd, 0), 1);
-      hero.style.transform = p ? 'translate3d(0,' + (p * 20).toFixed(1) + 'px,0) scale(' + (1 - p * 0.02).toFixed(4) + ')' : '';
-    }
     if (ink) spy();
   }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
   w.addEventListener('scroll', onScroll, { passive: true });
   w.addEventListener('resize', function () { measure(); active = null; onScroll(); }, { passive: true });
   w.addEventListener('load', measure);
-  if (hero && 'IntersectionObserver' in w) {
-    new IntersectionObserver(function (e) { heroOn = e[0].isIntersecting; }).observe(hero);
-  }
   measure();
   frame();
 
