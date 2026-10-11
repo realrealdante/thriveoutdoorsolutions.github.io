@@ -20,7 +20,9 @@
     var t = id ? document.getElementById(id) : null;
     if (!t) return;
     e.preventDefault();
-    t.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.thriveScrollTo && !rm) window.thriveScrollTo(t); /* v10 eased scroll */
+    else t.scrollIntoView({ behavior: rm ? 'auto' : 'smooth', block: 'start' });
     if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
     t.focus({ preventScroll: true });
   });
@@ -36,7 +38,8 @@
     note.innerHTML = msg;
     note.className = 'fine form-note' + (kind ? ' is-' + kind : '');
     note.setAttribute('role', kind === 'error' ? 'alert' : 'status');
-    note.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (window.thriveScrollTo && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) window.thriveScrollTo(note, 'center'); /* v10 */
+    else note.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   var fallback = 'Email <a href="mailto:' + EMAIL + '">' + EMAIL + '</a> or call/text <a href="tel:' + PHONE + '">0492 300 404</a>.';
 
@@ -63,7 +66,7 @@
       Service: service,
       Message: v('message')
     };
-    if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = 'Sending…'; }
+    if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = 'Sending…'; btn.classList.add('is-loading'); /* v10 spinner hook */ }
     fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -71,7 +74,7 @@
     }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
         if (!res.ok || String(res.j.success) !== 'true') throw new Error(res.j.message || 'failed');
-        form.reset();
+        if (window.thriveSoftReset) window.thriveSoftReset(form); else form.reset(); /* v10: fade, then reset */
         show('<strong>✓ Thanks, your request has been sent!</strong> I\'ll be in touch soon. Need me sooner? Call or text <a href="tel:' + PHONE + '">0492 300 404</a>.', 'success');
         if (btn) { btn.dataset.label = 'Sent ✓'; btn.classList.add('is-sent'); }
       })
@@ -79,7 +82,7 @@
         show('Sorry, that didn\'t send. ' + fallback, 'error');
       })
       .then(function () {
-        if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || 'Send quote request'; }
+        if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || 'Send quote request'; btn.classList.remove('is-loading'); /* v10 */ }
       });
   });
 
@@ -198,4 +201,155 @@
     requestAnimationFrame(function () { root.classList.add('is-live'); });
   });
   schedule();
+})();
+
+/* ==== v10 UI motion & polish (progressive enhancement, no libraries) ====
+   Reveals, header frost, hero parallax, nav scrollspy, live field ticks.
+   No JS / reduced motion = page exactly as before. Hook above: is-loading. */
+(function () {
+  var d = document, w = window, de = d.documentElement;
+  de.classList.add('js');
+  var reduce = w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var each = function (sel, fn) { [].forEach.call(d.querySelectorAll(sel), fn); };
+
+  // 1. Scroll reveal, once each; only below-the-fold elements are hidden; batches stagger 70ms
+  if (!reduce && 'IntersectionObserver' in w) {
+    var io = new IntersectionObserver(function (es) {
+      es.filter(function (e) { return e.isIntersecting; })
+        .sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left; })
+        .forEach(function (e, i) {
+          var el = e.target, t = Math.min(i, 6) * 70;
+          io.unobserve(el);
+          el.style.setProperty('--rv-d', t + 'ms');
+          el.classList.add('rv-in');
+          setTimeout(function () { el.classList.remove('rv', 'rv-in'); el.style.removeProperty('--rv-d'); }, t + 800);
+        });
+    }, { threshold: 0.12 });
+    var vh = w.innerHeight;
+    each('.section-head > *, .care > div > *, .service, .review, .reviews-actions, .contact-info > :not(ol):not(ul), .steps li, .direct li, .form, .footer-inner > *', function (el) {
+      if (el.getBoundingClientRect().top < vh) return;
+      el.classList.add('rv');
+      io.observe(el);
+    });
+  }
+
+  // 2. Header frost + hero parallax + scrollspy: one rAF-throttled passive listener
+  var header = d.querySelector('.site-header'), hero = d.querySelector('.hero-media');
+  var nav = d.querySelector('.nav'), links = nav ? [].slice.call(nav.querySelectorAll('a[href^="#"]')) : [];
+  var secs = links.map(function (a) { return d.getElementById(a.getAttribute('href').slice(1)); });
+  var ink = null, active = null, heroOn = true, heroEnd = 1, headH = 64, ticking = false;
+  if (links.length) {
+    ink = nav.appendChild(d.createElement('span'));
+    ink.className = 'nav-ink';
+    ink.setAttribute('aria-hidden', 'true');
+  }
+  function measure() {
+    if (hero) heroEnd = hero.getBoundingClientRect().bottom + w.scrollY || 1;
+    if (header) headH = header.offsetHeight;
+  }
+  function spy() {
+    var line = headH + w.innerHeight * 0.3, cur = null;
+    secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top <= line) cur = links[i]; });
+    if (w.innerHeight + w.scrollY >= de.scrollHeight - 2) cur = links[links.length - 1];
+    if (cur === active) return;
+    if (active) { active.classList.remove('is-active'); active.removeAttribute('aria-current'); }
+    active = cur;
+    nav.classList.toggle('has-active', !!cur);
+    if (!cur) return;
+    cur.classList.add('is-active');
+    cur.setAttribute('aria-current', 'location');
+    ink.style.width = cur.offsetWidth + 'px';
+    ink.style.transform = 'translateX(' + cur.offsetLeft + 'px)';
+  }
+  function frame() {
+    ticking = false;
+    var y = w.scrollY;
+    if (header) { header.classList.toggle('is-scrolled', y > 10); header.classList.toggle('is-far', y > w.innerHeight * 0.6); }
+    if (hero && !reduce && heroOn) {
+      var p = Math.min(Math.max(y / heroEnd, 0), 1);
+      hero.style.transform = p ? 'translate3d(0,' + (p * 20).toFixed(1) + 'px,0) scale(' + (1 - p * 0.02).toFixed(4) + ')' : '';
+    }
+    if (ink) spy();
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+  w.addEventListener('scroll', onScroll, { passive: true });
+  w.addEventListener('resize', function () { measure(); active = null; onScroll(); }, { passive: true });
+  w.addEventListener('load', measure);
+  if (hero && 'IntersectionObserver' in w) {
+    new IntersectionObserver(function (e) { heroOn = e[0].isIntersecting; }).observe(hero);
+  }
+  measure();
+  frame();
+
+  // 3. Live fields: tick when valid; invalid only after blur + non-empty. Visual only.
+  var form = d.getElementById('quote-form');
+  if (form) {
+    var ok = function (el) {
+      var v = el.value.trim();
+      if (!v) return false;
+      if (el.type === 'tel') return v.replace(/\D/g, '').length >= 8;
+      return el.validity.valid;
+    };
+    var check = function (el, blur) {
+      var f = el.parentNode, v = ok(el);
+      f.classList.toggle('is-valid', v);
+      if (blur || f.classList.contains('is-invalid')) f.classList.toggle('is-invalid', !v && !!el.value.trim());
+    };
+    [].forEach.call(form.querySelectorAll('.field input'), function (el) {
+      el.addEventListener('input', function () { check(el); });
+      el.addEventListener('blur', function () { check(el, 1); });
+    });
+    form.addEventListener('reset', function () {
+      setTimeout(function () { each('#quote-form .field', function (f) { f.classList.remove('is-valid', 'is-invalid'); }); });
+    });
+  }
+
+  // 4. Eased in-page scroll (native smooth scroll covers long jumps in ~300ms, which reads as a jump).
+  //    Used by the anchor + form-note code above; cancelled by wheel/touch/keys.
+  var run = 0;
+  ['wheel', 'touchstart', 'keydown'].forEach(function (t) { w.addEventListener(t, function () { run++; }, { passive: true }); });
+  w.thriveScrollTo = function (el, block) {
+    var r = el.getBoundingClientRect(), from = w.scrollY;
+    var to = block === 'center' ? from + r.top - (w.innerHeight - r.height) / 2 : from + r.top - (parseFloat(getComputedStyle(de).scrollPaddingTop) || 0);
+    to = Math.max(0, Math.min(to, de.scrollHeight - w.innerHeight));
+    var dist = to - from, dur = Math.min(1100, 400 + Math.abs(dist) * 0.2), t0 = 0, id = ++run;
+    de.style.scrollBehavior = 'auto';
+    requestAnimationFrame(function f(t) {
+      if (id !== run) { de.style.scrollBehavior = ''; return; }
+      t0 = t0 || t;
+      var k = Math.min(1, (t - t0) / dur);
+      w.scrollTo(0, from + dist * (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(2 - 2 * k, 3) / 2));
+      if (k < 1) requestAnimationFrame(f); else de.style.scrollBehavior = '';
+    });
+  };
+
+  // 5. Soft reset after a successful send: fade the values out, then reset at the same size
+  w.thriveSoftReset = function (f) {
+    f.classList.add('is-clearing');
+    setTimeout(function () {
+      var ta = f.querySelector('textarea');
+      if (ta) ta.style.height = ta.offsetHeight + 'px';
+      f.reset();
+      setTimeout(function () { f.classList.remove('is-clearing'); }, 60);
+    }, reduce ? 0 : 1200);
+  };
+
+  // 6. Form note grows smoothly (success/error text is taller) instead of jumping the footer
+  var note = d.getElementById('form-note');
+  if (note && !reduce && w.MutationObserver) {
+    var nh = note.offsetHeight;
+    new MutationObserver(function () {
+      var h1 = note.offsetHeight;
+      if (Math.abs(h1 - nh) < 2) return;
+      note.style.cssText = 'height:' + nh + 'px;overflow:hidden';
+      note.offsetHeight; // reflow
+      note.style.transition = 'height .45s cubic-bezier(.2,.8,.2,1)';
+      note.style.height = h1 + 'px';
+      nh = h1;
+      setTimeout(function () { note.style.cssText = ''; }, 500);
+    }).observe(note, { childList: true, subtree: true, characterData: true });
+  }
+
+  // Lets :active feedback fire on cards for iOS touch
+  d.addEventListener('touchstart', function () {}, { passive: true });
 })();
