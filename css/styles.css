@@ -465,3 +465,39 @@ p { margin: 0; }
 .hero .lede { color: #cfd6d1; } /* --muted, lifted a step for text that sits on the photo */
 /* Contrast over the photo (v12 -> v13): scrim .6/.25/.15 -> .72/.34/.2, scroll dim .58 -> .64,
    alt panel .45 -> .52, hero text shadow tightened, ghost buttons get a dark fill + light border. */
+
+/* ==========================================================================
+   v14: social links (Instagram, Facebook). Footer icon buttons get the same
+   springy hover/press as .btn; a quiet "Follow along" row in the contact
+   section. Existing colours only; icons are --muted on --bg (~8:1), borders lifted from --line.
+   ========================================================================== */
+.footer-links a, .social a {
+  position: relative; -webkit-tap-highlight-color: transparent;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background-color .2s var(--ease),
+    box-shadow .35s var(--ease), transform .5s var(--spring);
+}
+.footer-links a { border-color: #34443b; }
+.footer-links a:focus-visible, .social a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 50%; }
+.follow { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.follow-label { margin: 0; font-size: .95rem; color: var(--text); }
+.social { display: flex; gap: 10px; }
+.social a {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border: 1px solid #34443b; border-radius: 50%; color: var(--muted); background: var(--bg);
+}
+.social svg, .footer-links svg { display: block; }
+@media (hover: hover) {
+  .footer-links a:hover, .social a:hover {
+    color: var(--accent); border-color: var(--accent);
+    box-shadow: 0 8px 22px -8px var(--glow), 0 0 0 4px rgba(140, 199, 159, .07);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .footer-links a:hover, .social a:hover { transform: translateY(-1px); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .footer-links a:active, .social a:active {
+    transform: scale(.92); color: var(--accent); border-color: var(--accent);
+    transition: transform .12s var(--ease), color .15s, border-color .15s;
+  }
+}
