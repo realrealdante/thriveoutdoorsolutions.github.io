@@ -362,3 +362,60 @@
   }
   w.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
 })();
+
+/* ==== v17 Seasonal tips: this month in a South East Queensland (subtropical) garden ====
+   Month comes from the visitor's own date. "Next month" peeks ahead and back with a short crossfade. */
+(function () {
+  var card = document.getElementById('season');
+  if (!card) return;
+  var M = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var T = [
+    ['Peak summer growth', ['Mow every 7 to 10 days with the blades raised, so lawns shade their own roots.', 'Check for armyworm and lawn grub: brown patches that spread fast after storms.', 'Water deeply in the early morning, and top up mulch to about 7 cm.']],
+    ['Wet season care', ['Keep drains and low spots clear so beds don\u2019t sit waterlogged.', 'Watch for fungal leaf spot and mildew; thin dense growth for airflow.', 'Weeds grow fast now: pull or spray them before they set seed.']],
+    ['Autumn planting begins', ['A great month to plant shrubs, natives and hedges as the heat eases.', 'Give lawns a slow-release feed to build strength before winter.', 'Sow cool-season veg: broccoli, cabbage, lettuce and peas.']],
+    ['Prime gardening weather', ['Give hedges a final shape before growth slows for winter.', 'Plant trees and natives while the soil is still warm.', 'Refresh mulch as the dry season approaches.']],
+    ['Into the dry season', ['Ease off watering; most gardens need far less now.', 'Rake leaves off lawns so the grass gets light.', 'Divide and replant clumping perennials and strappy plants.']],
+    ['Winter tidy-up', ['Mow less often and keep the height up; growth is slow.', 'Spot-spray bindii and other winter weeds before they seed in spring.', 'Hinterland frost pockets: cover tender plants on clear, still nights.']],
+    ['Mid-winter jobs', ['Prune roses in late July for a strong spring flush.', 'Clean, sharpen and service tools while the garden is quiet.', 'Keep on top of bindii and winter grass while they\u2019re small.']],
+    ['Getting ready for spring', ['Feed lawns, citrus and garden beds as the weather warms late in the month.', 'Prune hibiscus and other summer flowering shrubs.', 'Mulch before the dry, windy spring sets in.']],
+    ['Spring growth', ['Aerate and fertilise lawns; top-dress any thin or uneven patches.', 'Plant summer veg: tomatoes, beans, capsicum and cucumber.', 'Clear dry leaves and debris from around the house in the fire season.']],
+    ['Warm and dry', ['Water deeply but less often, early in the day, to grow deep roots.', 'Trim hedges after their spring flush to keep them dense.', 'Top up mulch now to carry beds through the hot months.']],
+    ['Storm season starts', ['Clear gutters and check trees for weak or overhanging limbs.', 'Mow regularly as growth takes off with the rain and humidity.', 'Watch lawns for armyworm and lawn grub as the weather heats up.']],
+    ['Summer heat', ['Water early in the morning and keep mulch topped up.', 'Give hedges and edges a tidy before Christmas.', 'Going away? Group pots in the shade and set up a timer.']]
+  ];
+  var now = new Date().getMonth(), m = now, d = document;
+  var q = function (k) { return card.querySelector('[data-s="' + k + '"]'); };
+  var body = d.getElementById('season-body'), btn = card.querySelector('.season-peek');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function fill(i) {
+    q('month').textContent = M[i];
+    q('title').textContent = '\u00b7 ' + T[i][0];
+    q('when').textContent = i === now ? 'this month' : 'next month';
+    var ul = q('tips'); ul.textContent = '';
+    T[i][1].forEach(function (t) { var li = d.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    if (btn) {
+      var nx = i === now;
+      q('peek').textContent = nx ? M[(now + 1) % 12] : 'Back to ' + M[now];
+      btn.setAttribute('aria-pressed', nx ? 'false' : 'true');
+      btn.setAttribute('aria-label', nx ? 'Peek at tips for ' + M[(now + 1) % 12] : 'Back to tips for ' + M[now]);
+    }
+  }
+  fill(m);
+  if (!btn) return;
+  btn.hidden = false;
+  var busy = false;
+  btn.addEventListener('click', function () {
+    if (busy) return;
+    m = m === now ? (now + 1) % 12 : now;
+    if (reduce) { fill(m); return; }
+    busy = true;
+    var h = body.offsetHeight;
+    body.style.minHeight = h + 'px';
+    body.classList.add('is-out');
+    setTimeout(function () {
+      fill(m);
+      body.classList.remove('is-out');
+      setTimeout(function () { body.style.minHeight = ''; busy = false; }, 300);
+    }, 260);
+  });
+})();
