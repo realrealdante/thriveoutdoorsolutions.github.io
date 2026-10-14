@@ -570,3 +570,97 @@ p { margin: 0; }
   }
 }
 @media (prefers-reduced-motion: reduce) { .tldr-bg img { transition: none; } }
+
+/* ==========================================================================
+   v17: "Local know-how" section: service-area map card + seasonal tips card.
+   Reuses .service cards (frost, hover lift, reveal). Existing palette only.
+   ========================================================================== */
+.local { display: grid; gap: 16px; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.local h3 { font-size: 1.2rem; }
+
+/* Map */
+.map-card { padding: 24px 24px 20px; display: flex; flex-direction: column; overflow: hidden; }
+.map-key { display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.key-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(140, 199, 159, .16), 0 0 14px rgba(140, 199, 159, .6); }
+.map-wrap {
+  position: relative; flex: 1; display: grid; place-items: center; margin: 0 -8px;
+  border-radius: 12px; background: #0a100d; border: 1px solid var(--line); overflow: hidden;
+}
+.map-svg { display: block; width: 100%; height: auto; max-height: 640px; font-family: var(--font); }
+.map-coast { fill: none; stroke: rgba(140, 199, 159, .55); stroke-width: 1.4; stroke-linejoin: round; }
+.map-bribie { stroke-opacity: .5; }
+.map-ridge { stroke: rgba(196, 207, 150, .2); stroke-width: 1; stroke-dasharray: 2 5; }
+.map-ridge-2 { stroke-opacity: .6; }
+.map-river { stroke: rgba(140, 199, 159, .18); stroke-width: 1.2; }
+.map-lake { fill: rgba(140, 199, 159, .12); stroke: rgba(140, 199, 159, .25); }
+.map-dot { fill: var(--text); fill-opacity: .8; }
+.map-label { fill: var(--text); font-size: 14px; font-weight: 500; letter-spacing: .01em; paint-order: stroke; stroke: #111a15; stroke-width: 4px; stroke-linejoin: round; }
+.map-label-home { fill: var(--accent); font-size: 16px; font-weight: 650; }
+.map-sub { fill: var(--muted); font-size: 9.5px; letter-spacing: .18em; font-weight: 600; }
+.map-region { fill: rgba(196, 207, 150, .42); font-size: 11px; letter-spacing: .42em; font-weight: 600; }
+.map-sea-label { fill: rgba(164, 175, 168, .3); font-size: 11px; letter-spacing: .5em; font-weight: 600; }
+.map-ui { fill: rgba(164, 175, 168, .55); stroke: rgba(164, 175, 168, .55); font-size: 10px; letter-spacing: .12em; }
+.map-ui text { stroke: none; }
+.map-core { fill: var(--accent); stroke: #0e1411; stroke-width: 2; }
+.map-pulse { fill: none; stroke: var(--accent); stroke-width: 1.5; opacity: 0; transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .map-pulse { animation: mapPulse 3.2s cubic-bezier(.2, .6, .3, 1) infinite; }
+  .map-pulse-2 { animation-delay: 1.6s; }
+  .map-halo { transform-box: fill-box; transform-origin: center; animation: mapHalo 3.2s ease-in-out infinite; }
+}
+@keyframes mapPulse { 0% { opacity: .75; transform: scale(1); } 100% { opacity: 0; transform: scale(4.2); } }
+@keyframes mapHalo { 0%, 100% { opacity: .75; } 50% { opacity: 1; } }
+
+/* Areas list */
+.areas-card h3 { margin-bottom: 18px; }
+.area-tags { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.area-tags li { font-size: .9rem; padding: 5px 13px; border-radius: 999px; border: 1px solid #34443b; color: var(--text); }
+.area-tags li.is-home { border-color: rgba(140, 199, 159, .6); color: var(--accent); }
+.areas-card { display: flex; flex-direction: column; }
+
+/* Seasonal tips */
+.season { display: flex; flex-direction: column; }
+.season .card-head { margin-bottom: 14px; }
+.season-eyebrow { margin: 0; }
+.season-when { color: var(--muted); }
+.season-peek {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 36px; padding: 0 10px 0 14px; margin: -6px -8px -6px 0;
+  border: 1px solid #34443b; border-radius: 999px; background: transparent; color: var(--muted);
+  font: 500 .85rem/1 var(--font); cursor: pointer; white-space: nowrap; -webkit-tap-highlight-color: transparent;
+  transition: color .2s var(--ease), border-color .2s var(--ease), transform .5s var(--spring);
+}
+.season-peek svg { transition: transform .45s var(--spring); }
+.season-peek[aria-pressed="true"] svg { transform: rotate(180deg); }
+@media (hover: hover) { .season-peek:hover { color: var(--accent); border-color: var(--accent); } }
+.season-peek:active { transform: scale(.95); }
+.season h3 { font-size: clamp(1.35rem, 3vw, 1.6rem); margin-bottom: 18px; text-wrap: balance; }
+.season h3 [data-s="month"] { color: var(--accent); }
+.season-title { color: var(--text); }
+.season-tips { gap: 12px; color: #cfd6d1; }
+.season-body { transition: opacity .28s var(--ease), translate .28s var(--ease); }
+.season-body.is-out { opacity: 0; translate: 0 6px; }
+.season-note { margin-top: auto; padding-top: 22px; }
+.season-note::before { content: ""; display: block; border-top: 1px solid var(--line); margin-bottom: 14px; }
+
+@media (min-width: 900px) {
+  .local { grid-template-columns: 1.15fr 1fr; grid-template-rows: auto 1fr; }
+  .map-card { grid-row: span 2; }
+  .season { grid-row: 1; grid-column: 2; }
+  .areas-card { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) { .season-body.is-out { opacity: 1; translate: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .js .map-card, .js .areas-card, .js .season { background: rgba(22, 31, 26, .92); }
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    @media (min-width: 640px) {
+      .js .map-card, .js .areas-card, .js .season { background: rgba(22, 31, 26, .74); }
+    }
+  }
+}
+@media (min-width: 900px) {
+  .map-wrap { min-height: 460px; }
+  .map-svg { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; }
+}
+.season-eyebrow { white-space: nowrap; }
+@media (max-width: 479px) { .season-lead { display: none; } .season-when { color: var(--accent); } }
