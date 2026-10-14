@@ -668,3 +668,6 @@ p { margin: 0; }
 /* v18: "Areas" nav item - keep every label on one line and tighten spacing on small desktops/tablet landscape */
 .nav a { white-space: nowrap; }
 @media (min-width: 900px) and (max-width: 1099px) { .nav { gap: 18px; } .header-inner { gap: 16px; } }
+/* v19: minor coastal suburbs - smaller labels and dots */
+.map-label-sm { font-size: 12px; font-weight: 450; fill-opacity: .82; stroke-width: 3.5px; }
+.map-dot-sm { fill-opacity: .65; }
