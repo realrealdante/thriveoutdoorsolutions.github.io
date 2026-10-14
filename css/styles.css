@@ -664,3 +664,7 @@ p { margin: 0; }
 }
 .season-eyebrow { white-space: nowrap; }
 @media (max-width: 479px) { .season-lead { display: none; } .season-when { color: var(--accent); } }
+
+/* v18: "Areas" nav item - keep every label on one line and tighten spacing on small desktops/tablet landscape */
+.nav a { white-space: nowrap; }
+@media (min-width: 900px) and (max-width: 1099px) { .nav { gap: 18px; } .header-inner { gap: 16px; } }
