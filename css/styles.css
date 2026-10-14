@@ -501,3 +501,72 @@ p { margin: 0; }
     transition: transform .12s var(--ease), color .15s, border-color .15s;
   }
 }
+
+/* ==========================================================================
+   v15: TLDR; link in the header + the /tldr/ feed page. Existing colours only.
+   Desktop: "TLDR;" sits last in .nav. Phones/tablets (<900px, where .nav is hidden):
+   a compact pill (.tldr-m) next to the Call button.
+   ========================================================================== */
+.nav a.nav-tldr { color: var(--accent-2); font-weight: 600; letter-spacing: .01em; }
+.nav a.nav-tldr:hover, .nav a.nav-tldr[aria-current="page"] { color: var(--accent); }
+.tldr-m {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 0 12px; margin-right: -12px;
+  color: var(--accent-2); font-weight: 600; font-size: .95rem; text-decoration: none; letter-spacing: .01em;
+  border-radius: 999px; -webkit-tap-highlight-color: transparent; transition: color .2s var(--ease);
+}
+.tldr-m:hover, .tldr-m[aria-current="page"] { color: var(--accent); }
+@media (min-width: 900px) { .tldr-m { display: none; } }
+@media (max-width: 400px) { .header-inner { gap: 14px; } .tldr-m { padding: 0 8px; margin-right: -8px; } }
+@media (max-width: 899px) { .brand { white-space: nowrap; } }
+@media (max-width: 440px) { .brand em { display: none; } } /* phones: logo + "Thrive" so TLDR; and Call fit on one line */
+
+/* ---- TLDR page ---- */
+.tldr-page .hero-media { display: none; }
+.tldr-head { padding: 72px 0 40px; text-align: center; }
+.tldr-head h1 { font-size: clamp(2.6rem, 11vw, 4.6rem); letter-spacing: -0.04em; }
+.tldr-head h1 .semi { color: var(--accent); }
+.tldr-head .lede { margin: 16px auto 0; max-width: 44ch; color: #cfd6d1; }
+.tldr-head .fine { margin-top: 14px; }
+.feed { width: min(100% - 32px, 720px); margin: 0 auto; padding: 0 0 96px; display: grid; gap: 28px; list-style: none; }
+.post {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+  transition: border-color .4s var(--ease), box-shadow .5s var(--ease);
+}
+@media (hover: hover) { .post:hover { border-color: rgba(140, 199, 159, .32); box-shadow: 0 18px 40px -20px rgba(0, 0, 0, .75); } }
+.post-media { margin: 0; position: relative; aspect-ratio: 16 / 9; background: var(--bg-alt); overflow: hidden; }
+.post-media img { width: 100%; height: 100%; object-fit: cover; }
+.post-media figcaption {
+  position: absolute; right: 8px; bottom: 8px; max-width: calc(100% - 16px);
+  font-size: .72rem; line-height: 1.35; color: var(--text); background: rgba(14, 20, 17, .82);
+  padding: 4px 9px; border-radius: 8px;
+}
+.post-media figcaption a { color: var(--text); }
+.post-media figcaption a:hover { color: var(--accent); }
+.post-body { padding: 24px 22px 26px; display: grid; gap: 14px; }
+.post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: .85rem; color: var(--muted); }
+.post-meta .tag { margin: 0; color: var(--accent-2); border-color: #34443b; font-weight: 600; letter-spacing: .02em; }
+.post h2 { font-size: clamp(1.4rem, 5.4vw, 1.85rem); text-wrap: balance; }
+.post-tldr { font-size: 1.05rem; color: var(--text); }
+.post-tldr strong { color: var(--accent); font-weight: 700; margin-right: 4px; }
+.post-text { color: #cfd6d1; }
+.post-why { padding: 12px 16px; border-left: 3px solid var(--accent); background: rgba(140, 199, 159, .08); border-radius: 0 10px 10px 0; font-size: .95rem; }
+.post-why strong { display: block; color: var(--accent); font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 2px; }
+.post-source { font-size: .9rem; color: var(--muted); }
+.post-source a { font-weight: 600; }
+@media (min-width: 640px) { .post-body { padding: 30px 34px 32px; } .tldr-head { padding: 104px 0 56px; } }
+
+/* Living background (JS + motion only): two fixed photo layers crossfade (opacity only, no zoom)
+   to the photo of the post in view, under a dark scrim so the frosted cards stay readable. */
+.tldr-bg { display: none; }
+.js .tldr-bg { display: block; position: fixed; inset: 0 0 auto; height: 100vh; height: 100lvh; z-index: -1; background: var(--bg); overflow: hidden; pointer-events: none; }
+.tldr-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s var(--ease); }
+.tldr-bg img.on { opacity: 1; }
+.tldr-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14, 20, 17, .8), rgba(14, 20, 17, .7) 40%, rgba(14, 20, 17, .86)); }
+.js .tldr-page .site-footer { background: rgba(14, 20, 17, .86); }
+.js .post { background: rgba(22, 31, 26, .93); }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  @media (min-width: 640px) {
+    .js .post { background: rgba(22, 31, 26, .8); -webkit-backdrop-filter: saturate(140%) blur(14px); backdrop-filter: saturate(140%) blur(14px); }
+  }
+}
+@media (prefers-reduced-motion: reduce) { .tldr-bg img { transition: none; } }
