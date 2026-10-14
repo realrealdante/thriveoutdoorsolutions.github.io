@@ -8,8 +8,16 @@
 
   // Always open at the top: drop any #section left in the URL and don't restore old scroll position
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // v15: arriving from another page with a #section (e.g. /tldr/ -> /#services) still lands on that section
+  var hashT = location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   window.scrollTo(0, 0);
+  if (hashT) window.addEventListener('load', function () {
+    setTimeout(function () {
+      var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (window.thriveScrollTo && !rm) window.thriveScrollTo(hashT); else hashT.scrollIntoView({ block: 'start' });
+    }, 120);
+  });
   window.addEventListener('pageshow', function (e) { if (!e.persisted) window.scrollTo(0, 0); });
 
   // In-page links scroll smoothly without adding #section to the URL
@@ -179,7 +187,7 @@
         });
     }, { threshold: 0.12 });
     var vh = w.innerHeight;
-    each('.section-head > *, .care > div > *, .service, .review, .reviews-actions, .contact-info > :not(ol):not(ul), .steps li, .direct li, .form, .footer-inner > *', function (el) {
+    each('.tldr-head > *, .post, .section-head > *, .care > div > *, .service, .review, .reviews-actions, .contact-info > :not(ol):not(ul), .steps li, .direct li, .form, .footer-inner > *', function (el) {
       if (el.getBoundingClientRect().top < vh) return;
       el.classList.add('rv');
       io.observe(el);
@@ -297,4 +305,60 @@
 
   // Lets :active feedback fire on cards for iOS touch
   d.addEventListener('touchstart', function () {}, { passive: true });
+})();
+
+/* ==== v15 TLDR; feed: living background ====
+   Two fixed <img> layers only. The post nearest the viewport centre picks the photo (its data-bg);
+   a post without one falls back to Kewin's job photos, looping. Images are only fetched when a post
+   comes near (IntersectionObserver), the layer swaps once decoded, and only opacity animates.
+   Reduced motion: one static photo. No JS: no layer at all (plain dark page, cards keep their photos). */
+(function () {
+  var bg = document.querySelector('.tldr-bg');
+  if (!bg) return;
+  var w = window, posts = [].slice.call(document.querySelectorAll('.post'));
+  if (!posts.length) return;
+  var reduce = w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var small = Math.min(screen.width, w.innerWidth) * (w.devicePixelRatio || 1) <= 1000 && w.innerWidth < 900;
+  var fall = (bg.getAttribute('data-fallback') || '').split(/\s+/).filter(Boolean), fi = 0;
+  var srcs = posts.map(function (p) {
+    var s = p.getAttribute(small ? 'data-bg-sm' : 'data-bg') || p.getAttribute('data-bg');
+    return s || (fall.length ? fall[fi++ % fall.length] : null);
+  });
+  var layers = [bg.appendChild(new Image()), bg.appendChild(new Image())], cur = 0, shown = null, want = null;
+  layers.forEach(function (im) { im.alt = ''; im.decoding = 'async'; im.setAttribute('aria-hidden', 'true'); });
+  var cache = {};
+  function warm(src) { if (src && !cache[src]) { var i = new Image(); i.decoding = 'async'; i.src = src; cache[src] = i; } return cache[src]; }
+  function show(src) {
+    if (!src || src === want) return;
+    want = src;
+    var im = warm(src);
+    (im.decode ? im.decode() : Promise.resolve()).catch(function () {}).then(function () {
+      if (want !== src) return;
+      var next = layers[1 - cur];
+      next.src = src;
+      next.classList.add('on'); layers[cur].classList.remove('on');
+      cur = 1 - cur; shown = src;
+    });
+  }
+  show(srcs[0]);
+  if (reduce) return;
+  if ('IntersectionObserver' in w) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { warm(srcs[posts.indexOf(e.target)]); io.unobserve(e.target); } });
+    }, { rootMargin: '100% 0px' });
+    posts.forEach(function (p) { io.observe(p); });
+  } else srcs.forEach(warm);
+  var ticking = false;
+  function frame() {
+    ticking = false;
+    var mid = w.innerHeight / 2, best = 0, bd = Infinity;
+    for (var i = 0; i < posts.length; i++) {
+      var r = posts[i].getBoundingClientRect();
+      var d = r.top > mid ? r.top - mid : r.bottom < mid ? mid - r.bottom : 0;
+      if (d < bd) { bd = d; best = i; }
+      if (r.top > mid) break;
+    }
+    show(srcs[best]);
+  }
+  w.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
 })();

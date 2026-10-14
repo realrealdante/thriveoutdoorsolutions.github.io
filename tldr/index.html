@@ -1,0 +1,160 @@
+<!doctype html>
+<!--
+  TLDR; feed. HOW TO ADD A WEEKLY POST (newest first, no build step):
+  1. Photo: a properly licensed image (Wikimedia Commons CC0/CC BY/CC BY-SA, Unsplash/Pexels licence, or an
+     official press image cleared for editorial use). Crop to 16:9, save EXIF-free as
+     images/tldr-<slug>-800.webp/.jpg and images/tldr-<slug>-1600.webp/.jpg (e.g. with Pillow or Squoosh).
+  2. Copy the newest <article class="post"> block below, paste it ABOVE it, and change: id, data-bg / data-bg-sm,
+     the image paths + alt, the photo credit + licence, <time datetime> + date text, the tag, headline, TLDR line,
+     the 100-170 word write-up, "Why it matters", and the Source link (keep target="_blank" rel="noopener noreferrer").
+  3. Update <lastmod> for /tldr/ in sitemap.xml. That's it: the reveal animation and living background pick it up.
+  No photo? Leave out data-bg/data-bg-sm and the <figure>; the background falls back to the job photos.
+-->
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="format-detection" content="telephone=no">
+  <title>TLDR; Garden tech, in short | Thrive Outdoor Solutions</title>
+  <meta name="description" content="Garden tech, in short: quick, plain-English reads on robot mowers, smart irrigation, soil sensors, AI plant ID and more. New post weekly.">
+  <link rel="canonical" href="https://www.thriveoutdoorsolutions.com.au/tldr/">
+  <meta name="theme-color" content="#0e1411">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32.png">
+  <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_AU">
+  <meta property="og:site_name" content="Thrive Outdoor Solutions">
+  <meta property="og:url" content="https://www.thriveoutdoorsolutions.com.au/tldr/">
+  <meta property="og:title" content="TLDR; Garden tech, in short | Thrive Outdoor Solutions">
+  <meta property="og:description" content="Garden tech, in short: quick, plain-English reads on robot mowers, smart irrigation, soil sensors, AI plant ID and more. New post weekly.">
+  <meta property="og:image" content="https://www.thriveoutdoorsolutions.com.au/images/og-image-v2.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Thrive Outdoor Solutions logo: two green leaves above the business name on a dark background">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.thriveoutdoorsolutions.com.au/images/og-image-v2.jpg">
+  <link rel="stylesheet" href="../css/styles.css?v=15">
+  <script>document.documentElement.classList.add('js')</script>
+</head>
+<body class="tldr-page">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="tldr-bg" aria-hidden="true" data-fallback="../images/show-pool-1200.webp ../images/show-house-1200.webp ../images/show-path-1200.webp ../images/show-paving-1200.webp ../images/show-hedges-1200.webp ../images/show-street-1200.webp"></div>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../" aria-label="Thrive Outdoor Solutions, home">
+        <img src="../images/logo-mark.png" width="48" height="32" alt="">
+        <span>Thrive <em>Outdoor Solutions</em></span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="../#services">Services</a>
+        <a href="../#care">DVA &amp; aged care</a>
+        <a href="../#reviews">Reviews</a>
+        <a href="../#quote">Contact</a>
+        <a class="nav-tldr" href="./" aria-current="page">TLDR;</a>
+      </nav>
+      <a class="tldr-m" href="./" aria-current="page">TLDR;</a>
+      <a class="btn btn-sm" href="tel:0492300404">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/></svg>
+        Call
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="wrap tldr-head">
+      <p class="eyebrow">Garden tech, in short</p>
+      <h1>TLDR<span class="semi">;</span></h1>
+      <p class="lede">Robot mowers, smart watering, soil sensors and clever garden gadgets, boiled down to a two-minute read. One new post a week.</p>
+      <p class="fine">Newest first</p>
+    </header>
+
+    <div class="feed">
+      <!-- POST 2026-10-12 -->
+      <article class="post" id="plant-id-apps-2026" data-bg="../images/tldr-plantain-1600.webp" data-bg-sm="../images/tldr-plantain-800.webp" aria-labelledby="plant-id-apps-2026-h">
+        <figure class="post-media">
+          <picture>
+            <source type="image/webp" srcset="../images/tldr-plantain-800.webp 800w, ../images/tldr-plantain-1600.webp 1600w" sizes="(min-width: 760px) 720px, calc(100vw - 32px)">
+            <img src="../images/tldr-plantain-800.jpg" srcset="../images/tldr-plantain-800.jpg 800w, ../images/tldr-plantain-1600.jpg 1600w" sizes="(min-width: 760px) 720px, calc(100vw - 32px)" width="1600" height="900" loading="lazy" decoding="async" alt="Close-up of a ribwort (buckhorn) plantain flower head with fine white hairs against a blurred background">
+          </picture>
+          <figcaption>Photo: <a href="https://commons.wikimedia.org/wiki/File:Plantago_lanceolata_kz07.jpg" target="_blank" rel="noopener noreferrer">Krzysztof Ziarnek, Kenraiz</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>, via Wikimedia Commons (cropped)</figcaption>
+        </figure>
+        <div class="post-body">
+          <p class="post-meta"><time datetime="2026-10-12">12 Oct 2026</time><span class="tag">AI plant ID</span></p>
+          <h2 id="plant-id-apps-2026-h">Snap, ID, sorted? Plant ID apps put to the test</h2>
+          <p class="post-tldr"><strong>TLDR:</strong>In Michigan State University's latest classroom test, the best app named plants correctly 76% of the time, and grasses tripped up nearly everything.</p>
+          <p class="post-text">Point your phone at a mystery plant and get a name back. Feels like magic, but how often is it actually right? Michigan State University Extension has been testing plant ID apps with its weed science students since 2018, and the May 2026 write-up added AI chatbots to the line-up.</p>
+          <p class="post-text">Students photographed real plants (ornamentals, broadleaf weeds, grasses, seedlings and trees) and fed the same photos into every tool. PictureThis came out on top with 76% of IDs spot on, or 88% helpful if you count near misses. ChatGPT was second at 54%. Google Lens, Gemini, Copilot and Seek landed between 28% and 48%. The weak spot was grasses: even the winner only got grass seedlings right 36% of the time, because the giveaway features are tiny and hard to catch in one photo.</p>
+          <p class="post-why"><strong>Why it matters for your garden</strong>Treat an app as a first guess, not the final word, especially before you spray a "weed" in the lawn. If it matters, get a second opinion.</p>
+          <p class="post-source">Source: <a href="https://www.canr.msu.edu/news/plant-identification-theres-an-app-for-that-actually-several" target="_blank" rel="noopener noreferrer">MSU Extension: "Plant identification? There's an app for that, actually several!" (Erin Hill, May 2026)</a></p>
+        </div>
+      </article>
+      <!-- POST 2026-10-05 -->
+      <article class="post" id="robot-mower-wire-vs-gps" data-bg="../images/tldr-robot-mower-1600.webp" data-bg-sm="../images/tldr-robot-mower-800.webp" aria-labelledby="robot-mower-wire-vs-gps-h">
+        <figure class="post-media">
+          <picture>
+            <source type="image/webp" srcset="../images/tldr-robot-mower-800.webp 800w, ../images/tldr-robot-mower-1600.webp 1600w" sizes="(min-width: 760px) 720px, calc(100vw - 32px)">
+            <img src="../images/tldr-robot-mower-800.jpg" srcset="../images/tldr-robot-mower-800.jpg 800w, ../images/tldr-robot-mower-1600.jpg 1600w" sizes="(min-width: 760px) 720px, calc(100vw - 32px)" width="1600" height="900" loading="lazy" decoding="async" alt="A small grey Husqvarna robot mower sitting on a large, freshly striped green lawn">
+          </picture>
+          <figcaption>Photo: <a href="https://commons.wikimedia.org/wiki/File:Husqvarna_Automower_308_with_track_marks_in_lawn.jpg" target="_blank" rel="noopener noreferrer">W.carter</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>, via Wikimedia Commons (cropped)</figcaption>
+        </figure>
+        <div class="post-body">
+          <p class="post-meta"><time datetime="2026-10-05">5 Oct 2026</time><span class="tag">Robotics</span></p>
+          <h2 id="robot-mower-wire-vs-gps-h">Wire or GPS? A robot mower face-off in a Sydney backyard</h2>
+          <p class="post-tldr"><strong>TLDR:</strong>Gadget Guy lived with two Husqvarna robot mowers for two months, and the cheaper boundary-wire model handled his big backyard just fine.</p>
+          <p class="post-text">Robot mowers come in two flavours: ones that follow a wire laid around the edge of your lawn, and ones that steer by satellite positioning with no wire at all. Gadget Guy's Angus Jones trialled one of each, writing it up in December 2025: the $3,499 Automower 415X on a wire, and the $5,147 410XE NERA with Husqvarna's EPOS satellite navigation and its own reference station.</p>
+          <p class="post-text">Before anything arrived, a dealer checked his block on satellite view and warned the backyard trees would upset the GPS model, so the wire mower got the big back lawn. The dealer's machine laid the wire in about 10 minutes. The verdict? Both kept the grass looking sharp all week, but he still whipper-snips the edges, sticks still need picking up, and blades want changing every couple of months.</p>
+          <p class="post-why"><strong>Why it matters for your garden</strong>Hinterland blocks often mean big trees, slopes and narrow paths. Match the mower type to your yard, get it installed properly, and keep the edges on the to-do list.</p>
+          <p class="post-source">Source: <a href="https://www.gadgetguy.com.au/robot-lawn-mower-gps-boundary-wire-which-is-better/" target="_blank" rel="noopener noreferrer">Gadget Guy: "GPS vs boundary wire robot lawn mower: Which is better?" (Angus Jones, Dec 2025)</a></p>
+        </div>
+      </article>
+      <!-- POST 2026-09-28 -->
+      <article class="post" id="diy-soil-sensor-irrigation" data-bg="../images/tldr-soil-sensors-1600.webp" data-bg-sm="../images/tldr-soil-sensors-800.webp" aria-labelledby="diy-soil-sensor-irrigation-h">
+        <figure class="post-media">
+          <picture>
+            <source type="image/webp" srcset="../images/tldr-soil-sensors-800.webp 800w, ../images/tldr-soil-sensors-1600.webp 1600w" sizes="(min-width: 760px) 720px, calc(100vw - 32px)">
+            <img src="../images/tldr-soil-sensors-800.jpg" srcset="../images/tldr-soil-sensors-800.jpg 800w, ../images/tldr-soil-sensors-1600.jpg 1600w" sizes="(min-width: 760px) 720px, calc(100vw - 32px)" width="1600" height="900" loading="lazy" decoding="async" alt="Soil sensor cables running into a freshly dug hole in grassy ground, with a tape measure showing the depth">
+          </picture>
+          <figcaption>Photo: <a href="https://commons.wikimedia.org/wiki/File:Installation_of_soil_sensors.jpg" target="_blank" rel="noopener noreferrer">UBC Micrometeorology</a>, <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC BY 2.0</a>, via Wikimedia Commons (cropped)</figcaption>
+        </figure>
+        <div class="post-body">
+          <p class="post-meta"><time datetime="2026-09-28">28 Sep 2026</time><span class="tag">Smart irrigation</span></p>
+          <h2 id="diy-soil-sensor-irrigation-h">A DIY soil sensor cut watering by almost 29%</h2>
+          <p class="post-tldr"><strong>TLDR:</strong>Researchers built a cheap IoT moisture probe (about US$62) and watered only when the soil asked for it: 28.8% less water and a bigger harvest.</p>
+          <p class="post-text">Most of us water on a timer or a hunch. A team at CIHEAM Bari in Italy tried a smarter way and published the results in the journal Sensors in March 2025. They built a low-cost soil moisture probe from off-the-shelf parts around an ESP32 microcontroller, for roughly US$62, and used its live readings to decide when to run the drip line on a lettuce crop.</p>
+          <p class="post-text">They compared that against scheduling from weather data. The sensor-led plot used 28.8% less water, ran the pump 16.2% fewer hours and still grew more lettuce (101.8 kg versus 93.8 kg). The homemade probe also held its own against two commercial sensors. It's a farm trial rather than a backyard one, but the idea scales down nicely to a veggie patch.</p>
+          <p class="post-why"><strong>Why it matters for your garden</strong>Watering when the soil is actually dry, not when the calendar says so, saves water and encourages deeper roots. Handy after a big Sunshine Coast downpour.</p>
+          <p class="post-source">Source: <a href="https://www.mdpi.com/1424-8220/25/5/1568" target="_blank" rel="noopener noreferrer">Sensors (MDPI): Abdelmoneim et al., "Comparative Analysis of Soil Moisture- and Weather-Based Irrigation Scheduling…" (Mar 2025)</a></p>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <img class="footer-logo" src="../images/logo-full-dark.png" width="140" height="104" alt="Thrive Outdoor Solutions">
+      <div class="footer-links">
+        <a href="https://www.facebook.com/thriveoutdoorsolutions" target="_blank" rel="noopener noreferrer" aria-label="Thrive Outdoor Solutions on Facebook">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M13.5 21v-7.5H16l.4-3h-2.9V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.3H8v3h2.5V21z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/thriveoutdoorsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Thrive Outdoor Solutions on Instagram">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 7.3a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm6-7.9a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0zM21 8.3c0-1.7-.5-3.2-1.7-4.4C18.1 2.7 16.6 2.3 15 2.2c-1.7-.1-4.3-.1-6 0-1.6.1-3.1.5-4.3 1.7S3.1 6.6 3 8.3c-.1 1.7-.1 6.8 0 8.4.1 1.6.5 3.1 1.7 4.3 1.2 1.2 2.7 1.6 4.3 1.7 1.7.1 4.3.1 6 0 1.6-.1 3.1-.5 4.3-1.7 1.2-1.2 1.6-2.7 1.7-4.3.1-1.7.1-6.7 0-8.4zm-2.2 10.2a3.4 3.4 0 0 1-1.9 1.9c-1.3.5-4.4.4-4.9.4s-3.6.1-4.9-.4a3.4 3.4 0 0 1-1.9-1.9c-.5-1.3-.4-4.4-.4-4.9s-.1-3.6.4-4.9a3.4 3.4 0 0 1 1.9-1.9c1.3-.5 4.4-.4 4.9-.4s3.6-.1 4.9.4a3.4 3.4 0 0 1 1.9 1.9c.5 1.3.4 4.4.4 4.9s.1 3.6-.4 4.9z"/></svg>
+        </a>
+        <a href="https://www.google.com/maps?cid=14386175522178846884" rel="noopener" target="_blank" aria-label="Find Thrive Outdoor Solutions on Google">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.19-1.79 4.13-1.15 1.15-2.93 2.4-6.05 2.4-4.83 0-8.6-3.89-8.6-8.72s3.77-8.72 8.6-8.72c2.6 0 4.51 1.03 5.91 2.35l2.31-2.31C18.75 1.44 16.13 0 12.48 0 5.87 0 .31 5.39.31 12s5.56 12 12.17 12c3.57 0 6.27-1.17 8.37-3.36 2.16-2.16 2.84-5.21 2.84-7.67 0-.76-.05-1.47-.17-2.05H12.48z"/></svg>
+        </a>
+        <a href="mailto:thriveoutdoorsolutions@gmail.com" aria-label="Email Thrive Outdoor Solutions">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4.2-8 5-8-5V6l8 5 8-5z"/></svg>
+        </a>
+      </div>
+      <p class="footer-trust">
+        <span><svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.6 8 11 4.6-1.4 8-6 8-11V5l-8-3zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.6-4.6 1.4 1.4-6 6z"/></svg>Fully insured &middot; $20M public liability</span>
+        <span>ABN<span translate="no" x-apple-data-detectors="false">65&#8203; 723&#8203; 149&#8203; 578</span></span>
+      </p>
+      <p class="fine">&copy; <span id="year">2026</span> Thrive Outdoor Solutions &middot; Maleny QLD &middot; <a href="tel:0492300404">0492 300 404</a></p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js?v=15" defer></script>
+</body>
+</html>
