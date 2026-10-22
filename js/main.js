@@ -379,7 +379,7 @@
     ['Mid-winter jobs', ['Prune roses in late July for a strong spring flush.', 'Clean, sharpen and service tools while the garden is quiet.', 'Keep on top of bindii and winter grass while they\u2019re small.']],
     ['Getting ready for spring', ['Feed lawns, citrus and garden beds as the weather warms late in the month.', 'Prune hibiscus and other summer flowering shrubs.', 'Mulch before the dry, windy spring sets in.']],
     ['Spring growth', ['Aerate and fertilise lawns; top-dress any thin or uneven patches.', 'Plant summer veg: tomatoes, beans, capsicum and cucumber.', 'Clear dry leaves and debris from around the house in the fire season.']],
-    ['Warm and dry', ['Water deeply but less often, early in the day, to grow deep roots.', 'Trim hedges after their spring flush to keep them dense.', 'Top up mulch now to carry beds through the hot months.']],
+    ['Warm and dry, they said\u2026 (pass the umbrella)', ['Water deeply but less often, early in the day, to grow deep roots.', 'Trim hedges after their spring flush to keep them dense.', 'Top up mulch now to carry beds through the hot months.']],
     ['Storm season starts', ['Clear gutters and check trees for weak or overhanging limbs.', 'Mow regularly as growth takes off with the rain and humidity.', 'Watch lawns for armyworm and lawn grub as the weather heats up.']],
     ['Summer heat', ['Water early in the morning and keep mulch topped up.', 'Give hedges and edges a tidy before Christmas.', 'Going away? Group pots in the shade and set up a timer.']]
   ];
